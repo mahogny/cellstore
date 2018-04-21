@@ -80,7 +80,7 @@ public class GeneNameMapping
 		GeneNameMapping m=new GeneNameMapping();
 		try
 			{
-			m.readMapping(new File("ensembl2genename.txt"));
+			m.readMapping(new File("e2g_mouse.csv"));
 			m.readMapping(new File("e2g_human.csv"));
 			}
 		catch (IOException e)
