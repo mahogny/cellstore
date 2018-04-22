@@ -113,7 +113,7 @@ public class GeneexpStoreHdf
 	
 	public static void scanExpdata(CellStoreDB db) throws IOException
 		{
-		File fexpdir=new File("expdata");
+		File fexpdir=new File("data/cellset");
 		for(File f:fexpdir.listFiles())
 			if(f.isDirectory())
 				{

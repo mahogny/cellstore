@@ -2,6 +2,13 @@ package db;
 
 import java.util.ArrayList;
 
+
+/**
+ * Counts for one gene across cells
+ * 
+ * @author Johan Henriksson
+ *
+ */
 public class GeneLinCounts
 	{
 	public int[] cellid;

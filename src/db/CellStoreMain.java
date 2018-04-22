@@ -9,39 +9,93 @@ import java.util.StringTokenizer;
 
 import hdf.GeneexpStoreHdf;
 
+/**
+ * Running of the database only
+ * 
+ * @author Johan Henriksson
+ *
+ */
 public class CellStoreMain
 	{
 	public CellStoreDB db=new CellStoreDB();
 
 	public CellStoreMain() throws IOException
 		{
+		db.readUsers();
+		
+		//later problem
+		scanDataCellSet();
+		scanDataClust();
+		scanDataDimred();
+		}
+	
+	
+	public void scanDataCellSet() throws IOException
+		{
 		//Read the count matrix
-		CellSetFile f=new CellSetFile();
-	/*	
-		CellSet cellset=readCountTable(new File("/home/mahogny/javaproj/bifurlo.git/bifurlo/data/rosmir/CD45-/sc_data.csv"));
-		cellset.cellsetName="CD45-";
-		f.setCellSet(cellset);
-		db.datasets.cellsets.put(0, f);
-*/
-		GeneexpStoreHdf.scanExpdata(db);
+		File fexpdir=new File("data/cellset");
+		for(File f:fexpdir.listFiles())
+			if(f.isDirectory())
+				{
+				int id=Integer.parseInt(f.getName());
+				System.out.println(id);
+				
+				//TODO support CSV files too
+				
+				File fileh=new File(f,"expdata.h5ad");
+				File filecsv=new File(f,"expdata.csv");
+				if(fileh.exists())
+					{
+					GeneexpStoreHdf h=new GeneexpStoreHdf(fileh);
+					CellSetFile csf=new CellSetFile();
+					csf.databaseIndex=id;
+					csf.file=h;
+					db.datasets.cellsets.put(id, csf);
+					}
+				else if(filecsv.exists())
+					{
+					System.out.println("todo");
+					CellSetFile cf=new CellSetFile();
+					CellSet cellset=readCountTable(filecsv);
+					cellset.cellsetName="CD45-"; //TODO check in json
+					cf.setCellSet(cellset);
+					db.datasets.cellsets.put(id, cf);
+					}
+				else
+					{
+					System.out.println("wtf");
+					}
+				}
+		}
+	
+	
+	public void scanDataDimred() throws IOException
+		{
+		//GeneexpStoreHdf.scanExpdata(db);
 		CellSet cellset=db.datasets.cellsets.get(0).getCellSet();
 		
 		
 		//Read the layout
-		CellDimRed dimred=readDimRed(new File("other/sc_pca.csv"), cellset);
+		CellDimRed dimred=readDimRed(new File("data/dimred/0/dimred.csv"), cellset);
 		dimred.name="tSNE";
 		db.datasets.dimreds.put(0,dimred);
+		}
+		
+	
+	public void scanDataClust() throws IOException
+		{
+		CellSet cellset=db.datasets.cellsets.get(0).getCellSet();
 
 		//Read the clustering
-		CellClustering clust=readClustering(new File("other/sc_samplemeta.csv"), cellset);
+		CellClustering clust=readClustering(new File("data/clustering/0/clust.csv"), cellset);
 		clust.name="clustering";
 		//sample,cluster_cd45minus,organism
 		db.datasets.clusterings.put(0,clust);
 
 		
-		//later problem
+		
 		}
-	
+		
 	
 	public static void main(String[] args) throws IOException
 		{

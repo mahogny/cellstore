@@ -174,16 +174,18 @@ public class ClusterView2D extends JPanel implements MouseMotionListener, MouseL
 			}
 		
 		
-		drawHistogram();
+		drawHistogram(g);
 		
 		}
 
 	/**
 	 * Draw a histogram of expression levels, and max/min level
 	 */
-	private void drawHistogram()
+	private void drawHistogram(Graphics g)
 		{
 		//For gabija
+		//loop and draw horizontal lines of different colors
+		
 		}
 
 	

@@ -136,19 +136,6 @@ public class CellStoreViewer extends JFrame implements ActionListener, KeyListen
 		
 	
 
-	public static void main(String[] args) throws IOException
-		{
-		System.out.println("Reading data");
-		CellStoreMain main=new CellStoreMain();
-		
-		CellStoreConnectionLocal conn=new CellStoreConnectionLocal();
-		conn.db=main.db;
-		
-		System.out.println("run viewer");
-		new CellStoreViewer(conn);
-		
-//		new CellStoreViewer(null);
-		}
 
 	
 	void updateViewInfo()
