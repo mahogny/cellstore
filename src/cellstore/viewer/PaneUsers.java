@@ -3,6 +3,7 @@ package cellstore.viewer;
 import java.awt.GridLayout;
 
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import cellstore.viewer.conn.CellStoreConnectionLocal;
@@ -14,22 +15,17 @@ import db.CellStoreUser;
  * @author Johan Henriksson
  *
  */
-public class UserView extends JPanel
+public class PaneUsers extends JPanel
 	{
 	private static final long serialVersionUID = 1L;
 
-	public UserView(CellStoreConnectionLocal conn)
+	public PaneUsers(CellStoreConnectionLocal conn)
 		{
-		// TODO Auto-generated constructor stub
-		
-		
 		String[] columnNames = {
 				"id",
         "User",
         "Full name",
         "Email"};
-		
-		
 		
 		int numuser=conn.db.user.size();
 		Object[][] data = new Object[numuser][];
@@ -38,7 +34,7 @@ public class UserView extends JPanel
 			{
 			Object[] dat={
 					new Integer(u.id),
-					u.user,
+					u.username,
 					u.name,
 					u.email};
 			data[i]=dat;
@@ -47,10 +43,12 @@ public class UserView extends JPanel
 					
 		JTable table = new JTable(data, columnNames);
 		setLayout(new GridLayout(1, 1));
-		add(table);
 		
+		JScrollPane scrollPane = new JScrollPane(table);
+		table.setFillsViewportHeight(true);
+		add(scrollPane);
 		
-		//show columns
+		//table.getTableHeader().setVisible(true);
 		}
 	
 

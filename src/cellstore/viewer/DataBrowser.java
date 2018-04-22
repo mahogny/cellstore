@@ -16,10 +16,11 @@ public class DataBrowser extends JFrame
 		setLayout(new GridLayout(1, 1));
 		add(tabbedPane);
 		
-		UserView vu=new UserView(conn);
-
+		PaneUsers vu=new PaneUsers(conn);
+		PaneCellSets vcs=new PaneCellSets(conn);
+		
 		tabbedPane.add("Users", vu);
-
+		tabbedPane.add("CellSets", vcs);
 		
 		setSize(800,500);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

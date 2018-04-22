@@ -30,7 +30,7 @@ public class CellStoreDB
 			{
 			CellStoreUser u=new CellStoreUser();
 			u.id=result.getInt("id");
-			u.user=result.getString("user");
+			u.username=result.getString("user");
 			u.name=result.getString("name");
 			u.email=result.getString("email");
 			
