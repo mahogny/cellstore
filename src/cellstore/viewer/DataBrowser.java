@@ -5,11 +5,20 @@ import java.awt.GridLayout;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 
-import cellstore.viewer.conn.CellStoreConnectionLocal;
+import cellstore.server.conn.CellStoreConnectionLocal;
 
+/**
+ * 
+ * Data browser window
+ * 
+ * @author Johan Henriksson
+ *
+ */
 public class DataBrowser extends JFrame
 	{
-	JTabbedPane tabbedPane = new JTabbedPane();
+	private static final long serialVersionUID = 1L;
+	
+	private JTabbedPane tabbedPane = new JTabbedPane();
 
 	public DataBrowser(CellStoreConnectionLocal conn)
 		{

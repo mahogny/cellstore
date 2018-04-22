@@ -2,8 +2,8 @@ package cellstore.viewer;
 
 import java.io.IOException;
 
-import cellstore.viewer.conn.CellStoreConnectionLocal;
-import db.CellStoreMain;
+import cellstore.server.CellStoreMain;
+import cellstore.server.conn.CellStoreConnectionLocal;
 
 /**
  * 
@@ -21,8 +21,7 @@ public class MainView
 		System.out.println("Reading data");
 		CellStoreMain main=new CellStoreMain();
 		
-		CellStoreConnectionLocal conn=new CellStoreConnectionLocal();
-		conn.db=main.db;
+		CellStoreConnectionLocal conn=new CellStoreConnectionLocal(main.db);
 		
 		System.out.println("run viewer for clusters");
 		new CellStoreViewer(conn);

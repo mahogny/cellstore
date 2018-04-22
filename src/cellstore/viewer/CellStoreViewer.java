@@ -16,11 +16,11 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-import cellstore.viewer.conn.CellStoreConnection;
-import cellstore.viewer.conn.CellStoreConnectionLocal;
-import db.CellClustering;
-import db.CellStoreMain;
-import db.GeneNameMapping;
+import cellstore.db.CellClustering;
+import cellstore.db.GeneNameMapping;
+import cellstore.server.CellStoreMain;
+import cellstore.server.conn.CellStoreConnection;
+import cellstore.server.conn.CellStoreConnectionLocal;
 
 /**
  * 
@@ -94,7 +94,14 @@ public class CellStoreViewer extends JFrame implements ActionListener, KeyListen
 		
 		if(conn!=null)
 			{
-			view.dimred=conn.getDimRed(0);
+			try
+				{
+				view.dimred=conn.getDimRed(0);
+				}
+			catch (IOException e)
+				{
+				e.printStackTrace();
+				}
 			}
 		
 		
@@ -120,18 +127,22 @@ public class CellStoreViewer extends JFrame implements ActionListener, KeyListen
 	
 	public void fillColorCombo()
 		{
-		comboColorMeta.removeAllItems();
-		for(int clId:conn.getListClusterings())
-//		for(CellClustering cl:conn.db.datasets.clusterings.values())
+		try
 			{
-			ColorBy cb=new ColorBy();
-			cb.clusterID=clId;
-			cb.clustering=conn.getClustering(clId);
-			comboColorMeta.addItem(cb);
+			comboColorMeta.removeAllItems();
+			for(int clId:conn.getListClusterings())
+//		for(CellClustering cl:conn.db.datasets.clusterings.values())
+				{
+				ColorBy cb=new ColorBy();
+				cb.clusterID=clId;
+				cb.clustering=conn.getClustering(clId);
+				comboColorMeta.addItem(cb);
+				}
 			}
-		
-		
-		
+		catch (IOException e)
+			{
+			e.printStackTrace();
+			}
 		}
 		
 	

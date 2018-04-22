@@ -10,10 +10,10 @@ import java.awt.event.MouseWheelListener;
 
 import javax.swing.JPanel;
 
-import cellstore.viewer.conn.CellStoreConnection;
-import db.CellClustering;
-import db.CellDimRed;
-import db.CellSet;
+import cellstore.db.CellClustering;
+import cellstore.db.CellDimRed;
+import cellstore.db.CellSet;
+import cellstore.server.conn.CellStoreConnection;
 
 /**
  * Frame showing a 2D clustering

@@ -1,15 +1,18 @@
 package cellstore.viewer;
 
 import java.awt.GridLayout;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import cellstore.viewer.conn.CellStoreConnectionLocal;
-import db.CellSet;
-import db.CellSetFile;
-import db.CellStoreUser;
+import cellstore.db.CellSet;
+import cellstore.db.CellSetFile;
+import cellstore.db.CellStoreUser;
+import cellstore.server.conn.CellStoreConnectionLocal;
 
 /**
  * A view of all the cellsets in the database
@@ -27,12 +30,17 @@ public class PaneCellSets extends JPanel
 				"id",
         "Owner"};
 		
-		int numuser=conn.db.datasets.cellsets.size();
+		Map<Integer, CellStoreUser> users=conn.getAllUsers();
+		Map<Integer,CellSetFile> cellsetFiles=conn.getCellSetFiles();
+		
+		
+		
+		int numuser=cellsetFiles.size();
 		Object[][] data = new Object[numuser][];
 		int i=0;
-		for(CellSetFile cellset:conn.db.datasets.cellsets.values())
+		for(CellSetFile cellset:cellsetFiles.values())
 			{
-			CellStoreUser u=conn.db.user.get(cellset.ownerID);
+			CellStoreUser u=users.get(cellset.ownerID);
 			
 			Object[] dat={
 					new Integer(cellset.databaseIndex),

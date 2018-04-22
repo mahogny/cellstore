@@ -1,13 +1,15 @@
 package cellstore.viewer;
 
 import java.awt.GridLayout;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import cellstore.viewer.conn.CellStoreConnectionLocal;
-import db.CellStoreUser;
+import cellstore.db.CellStoreUser;
+import cellstore.server.conn.CellStoreConnectionLocal;
 
 /**
  * A view of all the users in the database
@@ -27,10 +29,12 @@ public class PaneUsers extends JPanel
         "Full name",
         "Email"};
 		
-		int numuser=conn.db.user.size();
+		Map<Integer, CellStoreUser> users=conn.getAllUsers();
+
+		int numuser=users.size();
 		Object[][] data = new Object[numuser][];
 		int i=0;
-		for(CellStoreUser u:conn.db.user.values())
+		for(CellStoreUser u:users.values())
 			{
 			Object[] dat={
 					new Integer(u.id),
