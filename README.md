@@ -26,3 +26,23 @@ Something similar to this should be added to VM arguments when you run the code:
 -Djava.library.path=/home/mahogny/javaproj/cellstore/hdf
 
 
+
+TODO list
+---------
+
+
+* gradient color panel in 2d viewer. show highest level value as text on it
+** histogram on the gradient. low priority
+
+* function to save user database as json
+* user tab, add "create user" function
+** this is a new JDialog with fields. if written right, can be used to edit user info as well
+
+* tab: cellsets - add delete button
+
+* add tab: clusterings
+**	delete button
+
+* add tab: dimension reductions
+** delete button
+** double click on dimred to open cluster viewer (needs major cleanup)
