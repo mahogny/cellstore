@@ -31,6 +31,11 @@ public class CellStoreConnectionLocal implements CellStoreConnection
 		return db.datasets.dimreds.get(0);
 		}
 
+	public Map<Integer, CellDimRed> getDimReds()
+		{
+		return db.datasets.dimreds;
+		}
+
 	@Override
 	public Collection<Integer> getListClusterings()
 		{
@@ -54,6 +59,7 @@ public class CellStoreConnectionLocal implements CellStoreConnection
 		{
 		return db.datasets.cellsets;
 		}
+
 
 	
 	

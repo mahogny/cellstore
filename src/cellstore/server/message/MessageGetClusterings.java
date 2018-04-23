@@ -8,14 +8,16 @@ import cellstore.server.response.ResponseListClusterings;
 
 /**
  * 
- * Message to server: Get list of clusterings
+ * Message to server: Get a list of clusterings
+ * 
  * @author Johan Henriksson
  *
  */
-public class MessageGetListClusterings extends Message implements Serializable
+public class MessageGetClusterings extends Message implements Serializable
 	{
 	private static final long serialVersionUID = 1L;
 	
+	//TODO make it a list
 	public int id;
 
 	@Override

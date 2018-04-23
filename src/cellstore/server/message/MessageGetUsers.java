@@ -4,14 +4,18 @@ import cellstore.server.ClientThread;
 import cellstore.server.response.Response;
 import cellstore.server.response.ResponseListClusterings;
 import cellstore.server.response.ResponseListDimRed;
+import cellstore.server.response.ResponseListUsers;
 
 /**
  * 
+ * Message to server: Get users
+ * 
+ * TODO  do NOT send the passwords!!!!!
  * 
  * @author Johan Henriksson
  *
  */
-public class MessageGetCellClustering extends Message
+public class MessageGetUsers extends Message
 	{
 	private static final long serialVersionUID = 1L;
 	
@@ -20,11 +24,11 @@ public class MessageGetCellClustering extends Message
 	@Override
 	public Response handleOnServer(ClientThread client)
 		{
-		ResponseListClusterings resp=new ResponseListClusterings();
+		ResponseListUsers resp=new ResponseListUsers();
 		if(id>=0)
-			resp.list.put(id, client.db.datasets.clusterings.get(id));
+			resp.list.put(id, client.db.user.get(id));
 		else
-			resp.list.putAll(client.db.datasets.clusterings);
+			resp.list.putAll(client.db.user);
 		return resp;
 		}
 

@@ -8,33 +8,20 @@ import java.security.NoSuchAlgorithmException;
 import cellstore.db.CellStoreUser;
 import cellstore.server.ClientThread;
 import cellstore.server.response.Response;
-import cellstore.server.response.ResponseAuthChallenge;
 import cellstore.server.response.ResponsePassFail;
 
 /**
  * 
- * Message to server: Authenticate given challenge
+ * Message to server: Request to get authenticated
  * 
  * @author Johan Henriksson
  *
  */
-public class MessageAuthenticate extends Message implements Serializable
+public class MessageRequestAuthenticate extends Message implements Serializable
 	{
 	private static final long serialVersionUID = 1L;
 	
 	public String username;
-	public String password; //encrypted somehow
-	public ResponseAuthChallenge challenge;
-	
-	
-	public void setPass(String pass, ResponseAuthChallenge challenge)
-		{
-		String passenc=CellStoreUser.hashpass(pass, challenge.salt);
-		password=CellStoreUser.hashpass(passenc, challenge.moresalt);
-				
-		//Need to get the salt from the server. 
-		//In that case, might as well also have server provide the extra salt too
-		}
 		
 	@Override
 	public Response handleOnServer(ClientThread client)

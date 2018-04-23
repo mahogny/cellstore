@@ -18,9 +18,7 @@ import javax.swing.JTextField;
 
 import cellstore.db.CellClustering;
 import cellstore.db.GeneNameMapping;
-import cellstore.server.CellStoreMain;
 import cellstore.server.conn.CellStoreConnection;
-import cellstore.server.conn.CellStoreConnectionLocal;
 
 /**
  * 
@@ -122,6 +120,7 @@ public class CellStoreViewer extends JFrame implements ActionListener, KeyListen
 		fillColorCombo();
 		//updateViewInfo();
 		view.adjustScale();
+		setTitle("Cluster view");
 		}
 
 	

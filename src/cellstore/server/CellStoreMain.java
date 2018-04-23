@@ -2,16 +2,23 @@ package cellstore.server;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
 
 import cellstore.db.CellClustering;
 import cellstore.db.CellDimRed;
 import cellstore.db.CellSet;
 import cellstore.db.CellSetFile;
 import cellstore.db.CellStoreDB;
+import cellstore.db.CellStoreUser;
 import cellstore.db.GeneLinCounts;
 import cellstore.hdf.GeneexpStoreHdf;
 
@@ -46,14 +53,21 @@ public class CellStoreMain
 				int id=Integer.parseInt(f.getName());
 				System.out.println(id);
 				
-				//TODO support CSV files too
+				CellSetFile csf=new CellSetFile();
+
+				//// Read the metadata
+				FileInputStream is=new FileInputStream(new File(f,"info.json"));
+				JsonReader rdr = Json.createReader(is);
+				JsonObject result = rdr.readObject();
+				csf.name=result.getString("name");
+				is.close();
 				
+				//// Attach the data
 				File fileh=new File(f,"expdata.h5ad");
 				File filecsv=new File(f,"expdata.csv");
 				if(fileh.exists())
 					{
 					GeneexpStoreHdf h=new GeneexpStoreHdf(fileh);
-					CellSetFile csf=new CellSetFile();
 					csf.databaseIndex=id;
 					csf.file=h;
 					db.datasets.cellsets.put(id, csf);
@@ -63,7 +77,6 @@ public class CellStoreMain
 					System.out.println("todo");
 					CellSetFile cf=new CellSetFile();
 					CellSet cellset=readCountTable(filecsv);
-					cellset.cellsetName="CD45-"; //TODO check in json
 					cf.setCellSet(cellset);
 					db.datasets.cellsets.put(id, cf);
 					}

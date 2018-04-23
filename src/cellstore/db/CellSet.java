@@ -2,10 +2,25 @@ package cellstore.db;
 
 import java.util.HashMap;
 
+/**
+ * 
+ * A set of cells (count table)
+ * 
+ * For performance, genes and cells are referenced to by position in the array. 
+ * Lists of names are kept separately.
+ * 
+ * @author Johan Henriksson
+ *
+ */
 public class CellSet
 	{
-	public String cellsetName="";
+	//public String cellsetName="";  //Maybe don't need?
 	
+	/**
+	 * Loader of data - should long-term cache a gene or at the very least not load everything
+	 */
+	public CellSetDataRetriever dataretriever;
+
 	/**
 	 * 
 	 * First a set of properties for each cell, 
@@ -15,9 +30,7 @@ public class CellSet
 	
 	public String[] cellpropNames;
 	public Object[][] cellprop; //[prop][cell]
-	
-	
-	
+		
 	public String[] cellnames;
 	public String[] genename;
 	
@@ -34,18 +47,6 @@ public class CellSet
 		return genename.length;
 		}
 	
-	/**
-	 * Counts for a gene. If null then the data has not been fetched
-	 */
-//	public GeneLinCounts[] geneCount;
-
-	
-	public interface DataRetriever
-		{
-		public double getExp(int cellIndex, int geneIndex);
-		}
-	
-	public DataRetriever dataretriever;
 
 	
 	/**

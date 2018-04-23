@@ -5,13 +5,22 @@ import java.util.TreeMap;
 
 import cellstore.hdf.GeneexpStoreHdf;
 
+
+/**
+ * 
+ * A cellset *file* - should maybe not be a separate entity from CellSet?
+ * 
+ * @author Johan Henriksson
+ *
+ */
 public class CellSetFile
 	{
-	
+	public int ownerID;
+	public String name;
+	public int databaseIndex;
+
 	public GeneexpStoreHdf file;
 
-	public int databaseIndex;
-	
 	
 	/**
 	 * 
@@ -22,8 +31,6 @@ public class CellSetFile
 	public TreeMap<String, String> meta=new TreeMap<String, String>();
 	
 	
-	public int ownerID;
-
 	
 	
 	private CellSet cellset;
@@ -41,7 +48,6 @@ public class CellSetFile
 			try
 				{
 				cellset=new CellSet();
-				cellset.cellsetName="somename";
 				
 				cellset.cellnames=file.getCellNames();
 				cellset.genename=file.getGeneNames();
@@ -82,7 +88,7 @@ public class CellSetFile
 					}
 				
 				
-				cellset.dataretriever=new CellSet.DataRetriever()
+				cellset.dataretriever=new CellSetDataRetriever()
 					{
 					//Counts for a gene. If null then the data has not been fetched
 					//public GeneLinCounts[] geneCount;

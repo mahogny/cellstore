@@ -12,7 +12,7 @@ import java.util.Collection;
 import cellstore.db.CellClustering;
 import cellstore.db.CellDimRed;
 import cellstore.server.message.Message;
-import cellstore.server.message.MessageGetCellClustering;
+import cellstore.server.message.MessageGetUsers;
 import cellstore.server.message.MessageGetDimRed;
 import cellstore.server.response.Response;
 import cellstore.server.response.ResponseListClusterings;
@@ -79,7 +79,7 @@ public class CellStoreConnectionServer implements CellStoreConnection
 	@Override
 	public Collection<Integer> getListClusterings() throws IOException
 		{
-		MessageGetCellClustering m=new MessageGetCellClustering();
+		MessageGetUsers m=new MessageGetUsers();
 		m.id=-1; //TODO Possibly instead use a Set
 		ResponseListClusterings resp=(ResponseListClusterings)sendReceive(m);
 		return resp.list.keySet();
@@ -88,12 +88,18 @@ public class CellStoreConnectionServer implements CellStoreConnection
 	@Override
 	public CellClustering getClustering(int id) throws IOException
 		{
-		MessageGetCellClustering m=new MessageGetCellClustering();
+		MessageGetUsers m=new MessageGetUsers();
 		m.id=id;
 		ResponseListClusterings resp=(ResponseListClusterings)sendReceive(m);
 		return resp.list.get(id);
 		}
 
+	public boolean authenticate(String user, String password)
+		{
+		//TODO
+		
+		return false;
+		}
 	
 	
 	

@@ -47,6 +47,7 @@ public class PaneUsers extends JPanel
 					
 		JTable table = new JTable(data, columnNames);
 		setLayout(new GridLayout(1, 1));
+		table.setDefaultEditor(Object.class, null);
 		
 		JScrollPane scrollPane = new JScrollPane(table);
 		table.setFillsViewportHeight(true);

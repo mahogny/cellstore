@@ -27,13 +27,16 @@ public class DataBrowser extends JFrame
 		
 		PaneUsers vu=new PaneUsers(conn);
 		PaneCellSets vcs=new PaneCellSets(conn);
+		PaneDimReds vdr=new PaneDimReds(conn);
 		
-		tabbedPane.add("Users", vu);
+		tabbedPane.add("DimReds", vdr);
 		tabbedPane.add("CellSets", vcs);
+		tabbedPane.add("Users", vu);
 		
 		setSize(800,500);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
+		setTitle("CellStore browser");
 		}
 
 	}

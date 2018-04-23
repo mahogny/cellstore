@@ -11,6 +11,8 @@ import java.util.TreeMap;
  */
 public class CellStoreDatasets
 	{
+	public String groupName="";
+	
 	public TreeMap<Integer,CellSetFile> cellsets=new TreeMap<Integer, CellSetFile>();
 	public TreeMap<Integer,CellClustering> clusterings=new TreeMap<Integer, CellClustering>();
 	public TreeMap<Integer,CellDimRed> dimreds=new TreeMap<Integer, CellDimRed>();

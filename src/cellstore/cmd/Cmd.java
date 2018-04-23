@@ -1,4 +1,4 @@
-package cellstore.util;
+package cellstore.cmd;
 
 public class Cmd
 	{

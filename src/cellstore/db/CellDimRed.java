@@ -11,13 +11,23 @@ import java.util.ArrayList;
 public class CellDimRed
 	{
 	public ArrayList<CellSet> cellsets=new ArrayList<CellSet>();
-	
+
+	public String name="";
+	public int ownerID;
+	public int id;
+
 	public int[] cellsetIndex;
 	public int[] cellsetCell;
 	public double[] x;
 	public double[] y;
 
-	public String name;
+	/////These only exist if hasVector is true, and is the velocity
+	public boolean hasVector=false;
+	public double[] dx;
+	public double[] yy;
+
+
+	
 	
 	public void allocate(int len)
 		{
