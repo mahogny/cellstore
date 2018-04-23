@@ -7,7 +7,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-import cellstore.db.CellDimRed;
 import cellstore.db.CellStoreDB;
 import cellstore.server.message.Message;
 import cellstore.server.response.Response;

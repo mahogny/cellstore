@@ -1,5 +1,6 @@
 package cellstore.db;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -10,7 +11,7 @@ import java.util.ArrayList;
  */
 public class CellDimRed
 	{
-	public ArrayList<CellSet> cellsets=new ArrayList<CellSet>();
+	//public ArrayList<CellSet> cellsets=new ArrayList<CellSet>();
 
 	public String name="";
 	public int ownerID;
@@ -58,8 +59,8 @@ public class CellDimRed
 	public void makeRandom()
 		{
 		int n=200;
-		CellSet cellset=new CellSet();
-		cellsets.add(cellset);
+		//CellSet cellset=new CellSet();
+		//cellsets.add(cellset);
 		
 		allocate(n);
 		for(int i=0;i<n;i++)
@@ -73,5 +74,11 @@ public class CellDimRed
 	public int getNumCell()
 		{
 		return x.length;
+		}
+
+	public void readFromHdf(File fileh, CellStoreDB db)
+		{
+		// TODO Auto-generated method stub
+		
 		}
 	}

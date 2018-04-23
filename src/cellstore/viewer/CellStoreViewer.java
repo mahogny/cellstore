@@ -31,20 +31,23 @@ public class CellStoreViewer extends JFrame implements ActionListener, KeyListen
 	private static final long serialVersionUID = 1L;
 
 	private JComboBox<ColorBy> comboColorMeta=new JComboBox<ColorBy>();
-	private JRadioButton brColorMeta=new JRadioButton();
-	private JRadioButton brColorGene=new JRadioButton("Gene: ");
-	private ClusterView2D view=new ClusterView2D();
+	private JRadioButton rbColorMeta=new JRadioButton();
+	private JRadioButton rbColorGene=new JRadioButton("Gene: ");
+	private ClusterView2D view;
 	private JTextField tfGene=new JTextField();
 
 
-	GeneNameMapping gm=GeneNameMapping.getInstance();
+	private GeneNameMapping gm=GeneNameMapping.getInstance();
 	
 	public CellStoreConnection conn;
 	
 	
+	/**
+	 * One option as for what you can color by. For now only clusterings
+	 */
 	public static class ColorBy
 		{
-		CellClustering clustering;
+		public CellClustering clustering;
 		public int clusterID;
 					
 		@Override
@@ -54,53 +57,38 @@ public class CellStoreViewer extends JFrame implements ActionListener, KeyListen
 			}
 		}
 
-	
+
+	/**
+	 * Constructor
+	 */
 	public CellStoreViewer(CellStoreConnection conn)
 		{
 		this.conn=conn;
-
+		view=new ClusterView2D(conn);
 		
 		setLayout(new BorderLayout());
 
-
-//		ArrayList<String> listAC=new ArrayList<String>();
+		rbColorMeta.setSelected(true);
 		
-
-		brColorMeta.setSelected(true);
-		brColorMeta.addActionListener(this);
-		brColorGene.addActionListener(this);
-		
-		//AutoCompleteDecorator.decorate(tfGene, listAC, false); //new PlainDocument(), new TextComponentAdaptor(textComponent, items));
-
-//		AutoCompleteSupport.install(comboBox, items);
-
+		rbColorMeta.addActionListener(this);
+		rbColorGene.addActionListener(this);
 		tfGene.addKeyListener(this);
+		comboColorMeta.addActionListener(this);
+		
 		
 		JPanel topp=new JPanel(new GridBagLayout());
 		GridBagConstraints c=new GridBagConstraints();
 		c.gridx=0;
 		c.gridy=0;
 		c.fill=GridBagConstraints.HORIZONTAL;
-		topp.add(brColorMeta, c);
+		topp.add(rbColorMeta, c);
 		c.gridx++;
 		topp.add(comboColorMeta);
 		c.gridx++;
-		topp.add(brColorGene, c);
+		topp.add(rbColorGene, c);
 		c.gridx++;
 		c.weightx=1;
 		topp.add(tfGene, c);
-		
-		if(conn!=null)
-			{
-			try
-				{
-				view.dimred=conn.getDimRed(0);
-				}
-			catch (IOException e)
-				{
-				e.printStackTrace();
-				}
-			}
 		
 		
 		JPanel totalpanel=new JPanel(new BorderLayout());
@@ -111,36 +99,40 @@ public class CellStoreViewer extends JFrame implements ActionListener, KeyListen
 		
 		
 		ButtonGroup bg=new ButtonGroup();
-		bg.add(brColorGene);
-		bg.add(brColorMeta);
+		bg.add(rbColorGene);
+		bg.add(rbColorMeta);
 
 		setSize(1000,1000);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
-		fillColorCombo();
-		//updateViewInfo();
+		fillComboColorBy();
 		view.adjustScale();
 		setTitle("Cluster view");
 		}
 
-	
-	public void fillColorCombo()
+
+	/**
+	 * Fill in options for the combobox, what you can color by
+	 */
+	public void fillComboColorBy()
 		{
-		try
+		comboColorMeta.removeAllItems();
+		if(conn!=null)
 			{
-			comboColorMeta.removeAllItems();
-			for(int clId:conn.getListClusterings())
-//		for(CellClustering cl:conn.db.datasets.clusterings.values())
+			try
 				{
-				ColorBy cb=new ColorBy();
-				cb.clusterID=clId;
-				cb.clustering=conn.getClustering(clId);
-				comboColorMeta.addItem(cb);
+				for(int clId:conn.getListClusterings())
+					{
+					ColorBy cb=new ColorBy();
+					cb.clusterID=clId;
+					cb.clustering=conn.getClustering(clId);
+					comboColorMeta.addItem(cb);
+					}
 				}
-			}
-		catch (IOException e)
-			{
-			e.printStackTrace();
+			catch (IOException e)
+				{
+				e.printStackTrace();
+				}
 			}
 		}
 		
@@ -150,22 +142,21 @@ public class CellStoreViewer extends JFrame implements ActionListener, KeyListen
 	
 	void updateViewInfo()
 		{
-		ColorBy cb=(ColorBy)comboColorMeta.getSelectedItem();
+		//Default: No color
 		view.colorByClustering=null;
 		view.colorByGene=null;
-		
-		if(cb!=null && brColorMeta.isSelected())
+
+		//Color by clustering?
+		ColorBy cb=(ColorBy)comboColorMeta.getSelectedItem();
+		if(cb!=null && rbColorMeta.isSelected())
 			view.colorByClustering=cb.clustering;
 		
-		if(brColorGene.isSelected())
+		//Color by gene?
+		if(rbColorGene.isSelected())
 			{
 			String id=gm.getIDfor(tfGene.getText());
 			view.colorByGene=id;
 			}
-		//if()
-//		view.colorByGene=1;
-
-		
 		
 		
 		view.repaint();
@@ -174,7 +165,10 @@ public class CellStoreViewer extends JFrame implements ActionListener, KeyListen
 	@Override
 	public void actionPerformed(ActionEvent e)
 		{
-		if(e.getSource()==brColorGene || e.getSource()==brColorMeta)
+		if(e.getSource()==comboColorMeta && comboColorMeta.getItemCount()!=0)
+			rbColorMeta.setSelected(true);
+		
+		if(e.getSource()==rbColorGene || e.getSource()==rbColorMeta || e.getSource()==comboColorMeta)
 			{
 			updateViewInfo();
 			}
@@ -215,9 +209,30 @@ public class CellStoreViewer extends JFrame implements ActionListener, KeyListen
 				view.colorByGene=id;
 				*/
 				}
-			brColorGene.setSelected(true);
+			rbColorGene.setSelected(true);
 			updateViewInfo();
 			view.scaleGeneExp();
+			}
+		}
+
+
+	/**
+	 * Set which DimRed to display
+	 * 
+	 * @param id
+	 */
+	public void setDimRed(int id)
+		{
+		try
+			{
+			view.dimred=conn.getDimRed(id);
+			fillComboColorBy();
+			view.adjustScale();
+			updateViewInfo();
+			}
+		catch (IOException e)
+			{
+			e.printStackTrace();
 			}
 		}
 	

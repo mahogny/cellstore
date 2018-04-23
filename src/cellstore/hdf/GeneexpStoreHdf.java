@@ -121,7 +121,7 @@ public class GeneexpStoreHdf
 				System.out.println(id);
 				GeneexpStoreHdf h=new GeneexpStoreHdf(new File(f,"expdata.h5ad"));
 				CellSetFile csf=new CellSetFile();
-				csf.databaseIndex=id;
+				csf.id=id;
 				csf.file=h;
 				db.datasets.cellsets.put(id, csf);
 				}

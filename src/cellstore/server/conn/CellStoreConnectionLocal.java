@@ -1,7 +1,6 @@
 package cellstore.server.conn;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 import cellstore.db.CellClustering;
@@ -24,11 +23,12 @@ public class CellStoreConnectionLocal implements CellStoreConnection
 		{
 		db=db2;
 		}
+	
 
 	@Override
 	public CellDimRed getDimRed(int i)
 		{
-		return db.datasets.dimreds.get(0);
+		return db.datasets.dimreds.get(i);
 		}
 
 	public Map<Integer, CellDimRed> getDimReds()
@@ -43,9 +43,9 @@ public class CellStoreConnectionLocal implements CellStoreConnection
 		}
 
 	@Override
-	public CellClustering getClustering(int clId)
+	public CellClustering getClustering(int id)
 		{
-		return db.datasets.clusterings.get(clId);
+		return db.datasets.clusterings.get(id);
 		}
 
 	public Map<Integer, CellStoreUser> getAllUsers()
@@ -60,8 +60,19 @@ public class CellStoreConnectionLocal implements CellStoreConnection
 		return db.datasets.cellsets;
 		}
 
+	public CellSetFile getCellSetFile(int id)
+		{
+		CellSetFile csf=db.datasets.cellsets.get(id);
+		if(csf==null)
+			System.out.println("Tried to get csf "+id);
+		return csf;
+		}
 
-	
-	
+	public Map<Integer, CellClustering> getClusterings()
+		{
+		return db.datasets.clusterings;
+		}
+
+
 	
 	}

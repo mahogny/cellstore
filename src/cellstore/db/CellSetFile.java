@@ -17,7 +17,7 @@ public class CellSetFile
 	{
 	public int ownerID;
 	public String name;
-	public int databaseIndex;
+	public int id;
 
 	public GeneexpStoreHdf file;
 

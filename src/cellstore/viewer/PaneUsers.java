@@ -1,7 +1,6 @@
 package cellstore.viewer;
 
 import java.awt.GridLayout;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JPanel;

@@ -1,18 +1,11 @@
 package cellstore.viewer;
 
 import java.awt.GridLayout;
-import java.awt.Point;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
-
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import cellstore.db.CellSet;
 import cellstore.db.CellSetFile;
 import cellstore.db.CellStoreUser;
 import cellstore.server.conn.CellStoreConnectionLocal;
@@ -47,7 +40,7 @@ public class PaneCellSets extends JPanel
 			CellStoreUser u=users.get(cellset.ownerID);
 			
 			Object[] dat={
-					new Integer(cellset.databaseIndex),
+					new Integer(cellset.id),
 					cellset.name,
 					u.username
 					};

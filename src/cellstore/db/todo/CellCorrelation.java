@@ -1,8 +1,7 @@
-package cellstore.db;
+package cellstore.db.todo;
 
-import java.awt.Color;
 import java.util.ArrayList;
-import java.util.TreeMap;
+import cellstore.db.CellSet;
 
 /**
  * Correlation between cells. This can really be several things: 

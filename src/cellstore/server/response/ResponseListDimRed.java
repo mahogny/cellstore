@@ -1,7 +1,6 @@
 package cellstore.server.response;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import cellstore.db.CellDimRed;

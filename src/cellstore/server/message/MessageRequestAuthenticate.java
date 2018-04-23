@@ -1,10 +1,6 @@
 package cellstore.server.message;
 
 import java.io.Serializable;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 import cellstore.db.CellStoreUser;
 import cellstore.server.ClientThread;
 import cellstore.server.response.Response;

@@ -397,7 +397,7 @@ public class FitsDataset extends ScalarDS
 
     /** copy multi-dimension array of fits data into 1D array */
     private int to1Darray(Object dataIn, Object dataOut, int offset) throws Exception {
-        Class component = dataIn.getClass().getComponentType();
+        Class<?> component = dataIn.getClass().getComponentType();
         if (component == null) {
             return offset;
         }

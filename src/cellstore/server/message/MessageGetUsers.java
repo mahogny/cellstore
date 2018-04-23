@@ -2,8 +2,6 @@ package cellstore.server.message;
 
 import cellstore.server.ClientThread;
 import cellstore.server.response.Response;
-import cellstore.server.response.ResponseListClusterings;
-import cellstore.server.response.ResponseListDimRed;
 import cellstore.server.response.ResponseListUsers;
 
 /**

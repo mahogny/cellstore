@@ -3,12 +3,10 @@ package cellstore.hdf;
 import java.util.Vector;
 
 import cellstore.hdf.object.Dataset;
-import cellstore.hdf.object.HObject;
 import cellstore.hdf.object.h5.H5File;
 import hdf.hdf5lib.H5;
 import hdf.hdf5lib.HDF5Constants;
 import hdf.hdf5lib.exceptions.HDF5Exception;
-import hdf.hdf5lib.exceptions.HDF5LibraryException;
 
 public class OldTestHDF2
 	{

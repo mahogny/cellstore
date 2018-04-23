@@ -11,6 +11,7 @@ import java.util.Collection;
 
 import cellstore.db.CellClustering;
 import cellstore.db.CellDimRed;
+import cellstore.db.CellSetFile;
 import cellstore.server.message.Message;
 import cellstore.server.message.MessageGetUsers;
 import cellstore.server.message.MessageGetDimRed;
@@ -102,6 +103,11 @@ public class CellStoreConnectionServer implements CellStoreConnection
 		}
 	
 	
+	public CellSetFile getCellSetFile(int id)
+		{
+		throw new RuntimeException("not implemented");
+		}
+
 	
 	public void close() throws IOException
 		{

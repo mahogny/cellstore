@@ -23,9 +23,10 @@ public class MainView
 		
 		CellStoreConnectionLocal conn=new CellStoreConnectionLocal(main.db);
 		
+		/*
 		System.out.println("run viewer for clusters");
 		new CellStoreViewer(conn);
-		
+		*/
 		System.out.println("Run viewer for users");
 		new DataBrowser(conn);
 		

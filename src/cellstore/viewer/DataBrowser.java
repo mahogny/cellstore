@@ -29,8 +29,8 @@ public class DataBrowser extends JFrame
 		PaneCellSets vcs=new PaneCellSets(conn);
 		PaneDimReds vdr=new PaneDimReds(conn);
 		
-		tabbedPane.add("DimReds", vdr);
-		tabbedPane.add("CellSets", vcs);
+		tabbedPane.add("DimReds / Projections", vdr);
+		tabbedPane.add("CellSets / RNA Counts", vcs);
 		tabbedPane.add("Users", vu);
 		
 		setSize(800,500);

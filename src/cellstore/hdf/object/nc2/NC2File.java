@@ -19,9 +19,6 @@ import java.io.RandomAccessFile;
 import java.util.Iterator;
 
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.MutableTreeNode;
-import javax.swing.tree.TreeNode;
-
 import cellstore.hdf.object.Dataset;
 import cellstore.hdf.object.Datatype;
 import cellstore.hdf.object.FileFormat;

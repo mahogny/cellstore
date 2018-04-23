@@ -7,9 +7,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+import java.util.Vector;
 
 import javax.json.Json;
-import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 
@@ -18,9 +18,10 @@ import cellstore.db.CellDimRed;
 import cellstore.db.CellSet;
 import cellstore.db.CellSetFile;
 import cellstore.db.CellStoreDB;
-import cellstore.db.CellStoreUser;
 import cellstore.db.GeneLinCounts;
 import cellstore.hdf.GeneexpStoreHdf;
+import cellstore.hdf.object.Dataset;
+import cellstore.hdf.object.h5.H5File;
 
 /**
  * Running of the database only
@@ -42,10 +43,14 @@ public class CellStoreMain
 		scanDataDimred();
 		}
 	
-	
+
+	/**
+	 * Scan for count matrices
+	 * 
+	 * @throws IOException
+	 */
 	public void scanDataCellSet() throws IOException
 		{
-		//Read the count matrix
 		File fexpdir=new File("data/cellset");
 		for(File f:fexpdir.listFiles())
 			if(f.isDirectory())
@@ -60,6 +65,8 @@ public class CellStoreMain
 				JsonReader rdr = Json.createReader(is);
 				JsonObject result = rdr.readObject();
 				csf.name=result.getString("name");
+				csf.ownerID=result.getInt("owner");
+				csf.id=id;
 				is.close();
 				
 				//// Attach the data
@@ -68,59 +75,108 @@ public class CellStoreMain
 				if(fileh.exists())
 					{
 					GeneexpStoreHdf h=new GeneexpStoreHdf(fileh);
-					csf.databaseIndex=id;
 					csf.file=h;
-					db.datasets.cellsets.put(id, csf);
 					}
 				else if(filecsv.exists())
 					{
-					System.out.println("todo");
-					CellSetFile cf=new CellSetFile();
 					CellSet cellset=readCountTable(filecsv);
-					cf.setCellSet(cellset);
-					db.datasets.cellsets.put(id, cf);
+					csf.setCellSet(cellset);
 					}
 				else
-					{
-					System.out.println("wtf");
-					}
+					throw new IOException("Invalid cellset");
+				db.datasets.cellsets.put(id, csf);
 				}
 		}
 	
 	
+	/**
+	 * Scan for projections
+	 * 
+	 * @throws IOException
+	 */
 	public void scanDataDimred() throws IOException
 		{
-		//GeneexpStoreHdf.scanExpdata(db);
-		CellSet cellset=db.datasets.cellsets.get(0).getCellSet();
-		
-		
-		//Read the layout
-		CellDimRed dimred=readDimRed(new File("data/dimred/0/dimred.csv"), cellset);
-		dimred.name="tSNE";
-		db.datasets.dimreds.put(0,dimred);
+		File fexpdir=new File("data/dimred");
+		for(File f:fexpdir.listFiles())
+			if(f.isDirectory())
+				{
+				int id=Integer.parseInt(f.getName());
+				System.out.println(id);
+				
+				CellDimRed dimred=new CellDimRed();
+				
+				//// Read the metadata
+				FileInputStream is=new FileInputStream(new File(f,"info.json"));
+				JsonReader rdr = Json.createReader(is);
+				JsonObject result = rdr.readObject();
+				dimred.name=result.getString("name");
+				dimred.ownerID=result.getInt("owner");
+				dimred.id=id;
+				int relatedto=result.getInt("relatedto");
+				is.close();
+				
+				//// Attach the data
+				File fileh=new File(f,"dimred.h5");
+				File filecsv=new File(f,"dimred.csv");
+				if(fileh.exists())
+					{
+					dimred.readFromHdf(fileh, db);
+					}
+				else if(filecsv.exists())
+					{
+					CellSetFile cellset=db.datasets.cellsets.get(relatedto);//.getCellSet();
+					readDimRed(dimred, filecsv, cellset);
+					}
+				else
+					throw new IOException("Invalid dimred");
+				db.datasets.dimreds.put(id,dimred);
+				}
 		}
 		
 	
 	public void scanDataClust() throws IOException
 		{
-		CellSet cellset=db.datasets.cellsets.get(0).getCellSet();
+		File fexpdir=new File("data/clustering");
+		for(File f:fexpdir.listFiles())
+			if(f.isDirectory())
+				{
+				int id=Integer.parseInt(f.getName());
+				System.out.println(id);
+				
+				CellClustering clust=new CellClustering();
+				
+				//// Read the metadata
+				FileInputStream is=new FileInputStream(new File(f,"info.json"));
+				JsonReader rdr = Json.createReader(is);
+				JsonObject result = rdr.readObject();
+				clust.name=result.getString("name");
+				clust.owner=result.getInt("owner");
+				clust.id=id;
+				int relatedto=result.getInt("relatedto");
+				is.close();
+				
+				//// Attach the data
+				File fileh=new File(f,"clust.h5");
+				File filecsv=new File(f,"clust.csv");
+				if(fileh.exists())
+					{
+					clust.fromHdf(fileh, relatedto, db);
+					}
+				else if(filecsv.exists())
+					{
+					CellSetFile cellset=db.datasets.cellsets.get(relatedto);//.getCellSet();
+					readClustering(clust, filecsv, cellset);
+					}
+				else
+					throw new IOException("Invalid cell clustering");
+				db.datasets.clusterings.put(id,clust);
+				}
 
-		//Read the clustering
-		CellClustering clust=readClustering(new File("data/clustering/0/clust.csv"), cellset);
-		clust.name="clustering";
-		//sample,cluster_cd45minus,organism
-		db.datasets.clusterings.put(0,clust);
-
-		
-		
 		}
 		
 	
 	public static void main(String[] args) throws IOException
 		{
-		
-		
-		
 		new CellStoreMain();
 		}
 	
@@ -136,14 +192,13 @@ public class CellStoreMain
 	 * @return
 	 * @throws IOException
 	 */
-	public CellClustering readClustering(File f, CellSet cellset) throws IOException
+	public CellClustering readClustering(CellClustering clustering, File f, CellSetFile cellset) throws IOException
 		{
 		BufferedReader bi=new BufferedReader(new FileReader(f));
 		
 		String xName="cluster_cd45minus";
 		
-		CellClustering clustering=new CellClustering();
-		clustering.cellsets.add(cellset);
+		//clustering.cellsets.add(cellset);
 		
 		ArrayList<Integer> cellsetIndex=new ArrayList<Integer>();
 		ArrayList<Integer> cellsetCell=new ArrayList<Integer>();
@@ -179,8 +234,8 @@ public class CellStoreMain
 					thecluster=s;
 				}
 			
-			cellsetIndex.add(0);
-			cellsetCell.add(cellset.getIndexOfCell(geneName));
+			cellsetIndex.add(cellset.id);
+			cellsetCell.add(cellset.getCellSet().getIndexOfCell(geneName));
 			cluster.add(thecluster);
 			}
 		
@@ -203,15 +258,15 @@ public class CellStoreMain
 	 * @return
 	 * @throws IOException
 	 */
-	public CellDimRed readDimRed(File f, CellSet cellset) throws IOException
+	public CellDimRed readDimRed(CellDimRed dimred, File f, CellSetFile cellset) throws IOException
 		{
 		BufferedReader bi=new BufferedReader(new FileReader(f));
 		
 		String xName="PC1_cd45minus";
 		String yName="PC2_cd45minus";
 		
-		CellDimRed dimred=new CellDimRed();
-		dimred.cellsets.add(cellset);
+		//CellDimRed dimred=new CellDimRed();
+		//dimred.cellsets.add(cellset);
 		
 		ArrayList<Integer> cellsetIndex=new ArrayList<Integer>();
 		ArrayList<Integer> cellsetCell=new ArrayList<Integer>();
@@ -255,8 +310,8 @@ public class CellStoreMain
 					theY=Double.parseDouble(s);
 				}
 			
-			cellsetIndex.add(0);
-			cellsetCell.add(cellset.getIndexOfCell(geneName));
+			cellsetIndex.add(cellset.id);
+			cellsetCell.add(cellset.getCellSet().getIndexOfCell(geneName));
 			x.add(theX);
 			y.add(theY);
 			}

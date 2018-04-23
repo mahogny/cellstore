@@ -19,10 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
 
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.MutableTreeNode;
-import javax.swing.tree.TreeNode;
-
 import cellstore.hdf.object.Dataset;
 import cellstore.hdf.object.Datatype;
 import cellstore.hdf.object.FileFormat;
