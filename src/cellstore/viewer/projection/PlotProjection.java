@@ -1,4 +1,4 @@
-package cellstore.viewer;
+package cellstore.viewer.projection;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -57,7 +57,7 @@ public class PlotProjection extends JPanel implements MouseMotionListener, Mouse
 	 */
 	
 
-	CellDimRed dimred;
+	public CellDimRed dimred;
 	private CellStoreConnection conn;
 
 	/**

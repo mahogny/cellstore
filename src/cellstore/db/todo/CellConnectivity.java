@@ -9,18 +9,30 @@ import cellstore.db.CellSet;
  * It can be correlation.
  * It can be clonality of T cells.
  * 
+ * Clonality is actually a clustering thing... but this system would work too
+ * 
  * @author Johan Henriksson
  *
  */
-public class CellCorrelation
+public class CellConnectivity
 	{
 	public String name;
 	
 	public ArrayList<CellSet> cellsets=new ArrayList<CellSet>();	
-	public int[] cellsetIndex;
-	public int[] cellsetCell;
+	public int[] fromIndexCellset;
+	public int[] fromIndexCell;
+
+	public int[] toIndexCellset;
+	public int[] toIndexCell;
+
 	
-	//// TODO big matrix goes here
+	//In the future: possibly have gene1-gene2, to support cell communication
+	public double score;
+	
+	
+	
+	
+	
 	
 	
 	/*	

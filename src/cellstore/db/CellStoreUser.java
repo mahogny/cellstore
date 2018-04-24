@@ -5,7 +5,7 @@ import java.security.MessageDigest;
 
 /**
  * 
- * A user
+ * A user you can log in as
  * 
  * @author Johan Henriksson
  *
@@ -16,6 +16,7 @@ public class CellStoreUser
 	public String name;
 	public String username;
 	public String email;
+	public boolean isAdmin;
 	
 	public transient String password;
 	public transient String salt;

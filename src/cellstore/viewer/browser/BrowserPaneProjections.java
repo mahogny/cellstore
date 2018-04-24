@@ -12,7 +12,7 @@ import javax.swing.JTable;
 import cellstore.db.CellDimRed;
 import cellstore.db.CellStoreUser;
 import cellstore.server.conn.CellStoreConnectionLocal;
-import cellstore.viewer.ViewerProjection;
+import cellstore.viewer.projection.ViewerProjection;
 
 /**
  * A view of all the cellsets in the database

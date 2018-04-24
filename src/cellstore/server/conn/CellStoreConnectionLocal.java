@@ -81,5 +81,8 @@ public class CellStoreConnectionLocal implements CellStoreConnection
 		}
 
 
-	
+	public boolean authenticate(String user, String password)
+		{
+		return true;
+		}
 	}

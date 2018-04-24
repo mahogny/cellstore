@@ -29,12 +29,12 @@ public class PaneDE extends JPanel implements ActionListener
 	private static final long serialVersionUID = 1L;
 
 	public DiffExp de=new DiffExp();
-	public PlotVolcano volc;
-	private GeneNameMapping gm=GeneNameMapping.getInstance();
-
+	public PlotVolcano plotVolc;
 	private JButton bPubmed=new JButton("Pubmed");
 	private JButton bEnsembl=new JButton("Ensembl");
 	private JButton bGenecards=new JButton("Genecards");
+
+	private GeneNameMapping gm=GeneNameMapping.getInstance();
 
 
 	JTable table;
@@ -46,7 +46,7 @@ public class PaneDE extends JPanel implements ActionListener
 	 */
 	public PaneDE(CellStoreConnection conn)
 		{
-		volc=new PlotVolcano(conn);
+		plotVolc=new PlotVolcano(conn);
 		
 		String[] columnNames = {
 				"GeneID",
@@ -87,7 +87,7 @@ public class PaneDE extends JPanel implements ActionListener
 								bEnsembl,
 								bGenecards
 								)), 
-				volc));
+				plotVolc));
 		
 		bPubmed.addActionListener(this);
 		bEnsembl.addActionListener(this);
@@ -104,7 +104,7 @@ public class PaneDE extends JPanel implements ActionListener
 	    		{
 	    		System.out.println("row "+row);
 	    		String geneID=(String)table.getModel().getValueAt(row, 0);
-	    		volc.setSelectedGene(geneID);
+	    		plotVolc.setSelectedGene(geneID);
 		    	}
 	    	}
 			});
@@ -148,11 +148,7 @@ public class PaneDE extends JPanel implements ActionListener
 				else if(geneID.startsWith("ENSMUS"))
 					EvBrowserUtil.displayURL("http://www.ensembl.org/Mus_musculus/Gene/Summary?g="+geneID);
 				}
-				
 			}
-		
-		// TODO Auto-generated method stub
-		
 		}
 
 

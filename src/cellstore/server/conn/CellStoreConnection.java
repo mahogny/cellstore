@@ -18,4 +18,6 @@ public interface CellStoreConnection
 
 	public CellSetFile getCellSetFile(int id);
 
+	
+	public boolean authenticate(String user, String password) throws IOException;
 	}

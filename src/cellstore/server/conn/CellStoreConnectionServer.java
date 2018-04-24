@@ -95,7 +95,7 @@ public class CellStoreConnectionServer implements CellStoreConnection
 		return resp.list.get(id);
 		}
 
-	public boolean authenticate(String user, String password)
+	public boolean authenticate(String user, String password) throws IOException
 		{
 		//TODO
 		

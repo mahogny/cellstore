@@ -1,9 +1,10 @@
-package cellstore.viewer;
+package cellstore.viewer.projection;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -19,6 +20,7 @@ import javax.swing.JTextField;
 import cellstore.db.CellClustering;
 import cellstore.db.GeneNameMapping;
 import cellstore.server.conn.CellStoreConnection;
+import util.EvSwingUtil;
 
 /**
  * 
@@ -75,6 +77,14 @@ public class ViewerProjection extends JFrame implements ActionListener, KeyListe
 		tfGene.addKeyListener(this);
 		comboColorMeta.addActionListener(this);
 		
+		/*
+		JComponent topp=EvSwingUtil.layoutCompactHorizontal(
+				rbColorMeta,
+				comboColorMeta,
+				rbColorGene,
+				tfGene
+				);
+		*/
 		
 		JPanel topp=new JPanel(new GridBagLayout());
 		GridBagConstraints c=new GridBagConstraints();
@@ -90,20 +100,28 @@ public class ViewerProjection extends JFrame implements ActionListener, KeyListe
 		c.weightx=1;
 		topp.add(tfGene, c);
 		
+
+		PaneConnectivity paneConnectivity=new PaneConnectivity();
 		
+		setLayout(new GridLayout(1, 1));
+		add(EvSwingUtil.layoutACB(
+				topp,
+				view,
+				paneConnectivity
+				));
+		/*
 		JPanel totalpanel=new JPanel(new BorderLayout());
 		setContentPane(totalpanel);
 		
 		totalpanel.add(topp, BorderLayout.NORTH);
 		totalpanel.add(view, BorderLayout.CENTER);
-		
+		*/
 		
 		ButtonGroup bg=new ButtonGroup();
 		bg.add(rbColorGene);
 		bg.add(rbColorMeta);
 
 		setSize(1000,1000);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 		fillComboColorBy();
 		view.adjustScale();

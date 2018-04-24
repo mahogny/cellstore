@@ -24,13 +24,10 @@ public class ViewerClusterDE extends JFrame
 		this.conn=conn;
 		
 		paneDE=new PaneDE(conn);
-
 		setLayout(new GridLayout(1,1));
 		add(paneDE);
 		
-		
-		setSize(500,1000);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setSize(400,500);
 		setVisible(true);
 		setTitle("Cluster marker genes");
 		}
