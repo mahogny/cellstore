@@ -7,6 +7,7 @@ import cellstore.db.CellClustering;
 import cellstore.db.CellDimRed;
 import cellstore.db.CellSetFile;
 import cellstore.db.CellStoreDB;
+import cellstore.db.CellStoreDatasets;
 import cellstore.db.CellStoreUser;
 
 /**
@@ -71,6 +72,12 @@ public class CellStoreConnectionLocal implements CellStoreConnection
 	public Map<Integer, CellClustering> getClusterings()
 		{
 		return db.datasets.clusterings;
+		}
+
+
+	public Map<Integer, CellStoreDatasets> getStudies()
+		{
+		return db.grouping;
 		}
 
 

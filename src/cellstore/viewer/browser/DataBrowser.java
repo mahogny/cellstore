@@ -2,7 +2,9 @@ package cellstore.viewer.browser;
 
 import java.awt.GridLayout;
 
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import cellstore.server.conn.CellStoreConnectionLocal;
@@ -22,18 +24,28 @@ public class DataBrowser extends JFrame
 
 	public DataBrowser(CellStoreConnectionLocal conn)
 		{
-		setLayout(new GridLayout(1, 1));
-		add(tabbedPane);
-		
 		BrowserPaneUsers vu=new BrowserPaneUsers(conn);
 		BrowserPaneCounts vcs=new BrowserPaneCounts(conn);
 		BrowserPaneProjections vdr=new BrowserPaneProjections(conn);
+		BrowserPaneClusterings vc=new BrowserPaneClusterings(conn);
 		
-		tabbedPane.add("DimReds / Projections", vdr);
-		tabbedPane.add("CellSets / RNA Counts", vcs);
+		tabbedPane.add("Projections", vdr);
+		tabbedPane.add("Clusterings", vc);
+		tabbedPane.add("Counts", vcs);
 		tabbedPane.add("Users", vu);
 		
-		setSize(800,500);
+		BrowserPaneStudies vs=new BrowserPaneStudies(conn);
+		JPanel pvs=new JPanel();
+		pvs.setBorder(BorderFactory.createTitledBorder("Studies"));
+		pvs.setLayout(new GridLayout(1, 1));
+		pvs.add(vs);
+		
+		setLayout(new GridLayout(2, 1));
+		add(tabbedPane);
+		add(pvs);
+
+		
+		setSize(600,500);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 		setTitle("CellStore browser");

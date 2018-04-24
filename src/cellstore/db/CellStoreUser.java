@@ -3,6 +3,13 @@ package cellstore.db;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 
+/**
+ * 
+ * A user
+ * 
+ * @author Johan Henriksson
+ *
+ */
 public class CellStoreUser
 	{
 	public int id;
