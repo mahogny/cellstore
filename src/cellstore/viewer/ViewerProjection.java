@@ -26,14 +26,14 @@ import cellstore.server.conn.CellStoreConnection;
  * @author Johan Henriksson
  *
  */
-public class CellStoreViewer extends JFrame implements ActionListener, KeyListener
+public class ViewerProjection extends JFrame implements ActionListener, KeyListener
 	{
 	private static final long serialVersionUID = 1L;
 
 	private JComboBox<ColorBy> comboColorMeta=new JComboBox<ColorBy>();
 	private JRadioButton rbColorMeta=new JRadioButton();
 	private JRadioButton rbColorGene=new JRadioButton("Gene: ");
-	private ClusterView2D view;
+	private PlotProjection view;
 	private JTextField tfGene=new JTextField();
 
 
@@ -61,10 +61,10 @@ public class CellStoreViewer extends JFrame implements ActionListener, KeyListen
 	/**
 	 * Constructor
 	 */
-	public CellStoreViewer(CellStoreConnection conn)
+	public ViewerProjection(CellStoreConnection conn)
 		{
 		this.conn=conn;
-		view=new ClusterView2D(conn);
+		view=new PlotProjection(conn);
 		
 		setLayout(new BorderLayout());
 
@@ -107,7 +107,7 @@ public class CellStoreViewer extends JFrame implements ActionListener, KeyListen
 		setVisible(true);
 		fillComboColorBy();
 		view.adjustScale();
-		setTitle("Cluster view");
+		setTitle("Projection view");
 		}
 
 

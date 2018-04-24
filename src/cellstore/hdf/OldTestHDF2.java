@@ -11,6 +11,7 @@ import hdf.hdf5lib.exceptions.HDF5Exception;
 public class OldTestHDF2
 	{
 
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws Exception
 		{
 		
@@ -46,7 +47,7 @@ public class OldTestHDF2
 	
 	public static void main2(String[] args) throws NullPointerException, HDF5Exception
 		{
-    long[] dims2D = { 20, 10 };
+    //long[] dims2D = { 20, 10 };
 		
 		long file_id = -1;
     long dataset_id = -1;

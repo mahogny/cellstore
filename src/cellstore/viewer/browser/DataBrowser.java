@@ -1,4 +1,4 @@
-package cellstore.viewer;
+package cellstore.viewer.browser;
 
 import java.awt.GridLayout;
 
@@ -25,9 +25,9 @@ public class DataBrowser extends JFrame
 		setLayout(new GridLayout(1, 1));
 		add(tabbedPane);
 		
-		PaneUsers vu=new PaneUsers(conn);
-		PaneCellSets vcs=new PaneCellSets(conn);
-		PaneDimReds vdr=new PaneDimReds(conn);
+		BrowserPaneUsers vu=new BrowserPaneUsers(conn);
+		BrowserPaneCounts vcs=new BrowserPaneCounts(conn);
+		BrowserPaneProjections vdr=new BrowserPaneProjections(conn);
 		
 		tabbedPane.add("DimReds / Projections", vdr);
 		tabbedPane.add("CellSets / RNA Counts", vcs);

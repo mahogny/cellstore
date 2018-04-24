@@ -1,4 +1,4 @@
-package cellstore.viewer;
+package cellstore.viewer.browser;
 
 import java.awt.GridLayout;
 import java.awt.Point;
@@ -12,6 +12,7 @@ import javax.swing.JTable;
 import cellstore.db.CellDimRed;
 import cellstore.db.CellStoreUser;
 import cellstore.server.conn.CellStoreConnectionLocal;
+import cellstore.viewer.ViewerProjection;
 
 /**
  * A view of all the cellsets in the database
@@ -19,11 +20,11 @@ import cellstore.server.conn.CellStoreConnectionLocal;
  * @author Johan Henriksson
  *
  */
-public class PaneDimReds extends JPanel
+public class BrowserPaneProjections extends JPanel
 	{
 	private static final long serialVersionUID = 1L;
 
-	public PaneDimReds(final CellStoreConnectionLocal conn)
+	public BrowserPaneProjections(final CellStoreConnectionLocal conn)
 		{
 		String[] columnNames = {
 				"id",
@@ -61,6 +62,7 @@ public class PaneDimReds extends JPanel
 		table.setFillsViewportHeight(true);
 		add(scrollPane);
 
+		//On double-click, open projection
 		table.addMouseListener(new MouseAdapter() 
 			{
 	    public void mousePressed(MouseEvent mouseEvent) 
@@ -75,7 +77,7 @@ public class PaneDimReds extends JPanel
 	    		int id=(Integer)table.getModel().getValueAt(row, 0);
 	    		
 	    		
-	    		CellStoreViewer viewer=new CellStoreViewer(conn);
+	    		ViewerProjection viewer=new ViewerProjection(conn);
 	    		viewer.setDimRed(id);
 	    		
 		    	}

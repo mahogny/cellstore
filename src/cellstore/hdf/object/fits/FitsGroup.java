@@ -38,7 +38,8 @@ public class FitsGroup extends Group
      * The list of attributes of this data object. Members of the list are
      * instance of Attribute.
      */
-    private List attributeList;
+    @SuppressWarnings("rawtypes")
+		private List attributeList;
 
     /** The default object ID for HDF5 objects */
     private final static long[] DEFAULT_OID = {0};
@@ -52,7 +53,8 @@ public class FitsGroup extends Group
      * @param parent the parent of this group.
      * @param oid the unique identifier of this data object.
      */
-    public FitsGroup(
+    @SuppressWarnings("deprecation")
+		public FitsGroup(
         FileFormat fileFormat,
         String name,
         String path,
@@ -68,7 +70,8 @@ public class FitsGroup extends Group
     public boolean hasAttribute () { return false; }
 
     // Implementing DataFormat
-    public List getMetadata() throws Exception {
+    @SuppressWarnings("rawtypes")
+		public List getMetadata() throws Exception {
         if (!isRoot()) {
             return null; // there is only one group in the file: the root
         }
@@ -139,7 +142,8 @@ public class FitsGroup extends Group
     }
 
     //Implementing DataFormat
-    public List getMetadata(int... attrPropList) throws Exception {
+    @SuppressWarnings("rawtypes")
+		public List getMetadata(int... attrPropList) throws Exception {
         throw new UnsupportedOperationException("getMetadata(int... attrPropList) is not supported");
     }
 

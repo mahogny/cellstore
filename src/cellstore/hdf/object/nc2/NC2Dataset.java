@@ -45,7 +45,8 @@ public class NC2Dataset extends ScalarDS {
      * The list of attributes of this data object. Members of the list are
      * instance of Attribute.
      */
-    private List attributeList;
+    @SuppressWarnings("rawtypes")
+		private List attributeList;
 
     private Variable nativeDataset;
 
@@ -59,7 +60,8 @@ public class NC2Dataset extends ScalarDS {
      * @param oid
      *            the unique identifier for this dataset.
      */
-    public NC2Dataset(FileFormat fileFormat, Variable ncDataset, long[] oid) {
+    @SuppressWarnings("deprecation")
+		public NC2Dataset(FileFormat fileFormat, Variable ncDataset, long[] oid) {
         super(fileFormat, ncDataset.getName(), HObject.separator, oid);
         unsignedConverted = false;
         nativeDataset = ncDataset;
@@ -153,7 +155,8 @@ public class NC2Dataset extends ScalarDS {
     }
 
     // Implementing DataFormat
-    public List getMetadata() throws Exception {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+		public List getMetadata() throws Exception {
         if (attributeList != null) {
             return attributeList;
         }
@@ -212,7 +215,8 @@ public class NC2Dataset extends ScalarDS {
     /**
      * Retrieve and initialize dimensions and member information.
      */
-    @Override
+    @SuppressWarnings("unused")
+		@Override
     public void init() {
         if (nativeDataset == null) {
             return;
@@ -355,7 +359,8 @@ public class NC2Dataset extends ScalarDS {
     }
 
     //Implementing DataFormat
-    public List getMetadata(int... attrPropList) throws Exception {
+    @SuppressWarnings("rawtypes")
+		public List getMetadata(int... attrPropList) throws Exception {
         throw new UnsupportedOperationException("getMetadata(int... attrPropList) is not supported");
     }
 

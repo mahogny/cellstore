@@ -7,8 +7,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
-import java.util.Vector;
-
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
@@ -20,8 +18,6 @@ import cellstore.db.CellSetFile;
 import cellstore.db.CellStoreDB;
 import cellstore.db.GeneLinCounts;
 import cellstore.hdf.GeneexpStoreHdf;
-import cellstore.hdf.object.Dataset;
-import cellstore.hdf.object.h5.H5File;
 
 /**
  * Running of the database only

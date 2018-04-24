@@ -105,7 +105,8 @@ public class H5File extends FileFormat {
     /**
      * How many characters maximum in an attribute name?
      */
-    private static final int attrNameLen = 256;
+    @SuppressWarnings("unused")
+		private static final int attrNameLen = 256;
 
     /**
      * The library version bounds
@@ -2210,7 +2211,8 @@ public class H5File extends FileFormat {
      * @param parentObject
      *            the parent object.
      */
-    private int depth_first(HObject parentObject, int nTotal) {
+    @SuppressWarnings("deprecation")
+		private int depth_first(HObject parentObject, int nTotal) {
         log.trace("depth_first({}): start", parentObject);
 
         int nelems;

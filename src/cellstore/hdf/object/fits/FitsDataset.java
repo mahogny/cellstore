@@ -52,7 +52,8 @@ public class FitsDataset extends ScalarDS
      * The list of attributes of this data object. Members of the list are
      * instance of Attribute.
      */
-    private List attributeList;
+    @SuppressWarnings("rawtypes")
+		private List attributeList;
 
     private BasicHDU nativeDataset;
 
@@ -63,7 +64,8 @@ public class FitsDataset extends ScalarDS
      * @param ncDataset the netcdf variable.
      * @param oid the unique identifier for this dataset.
      */
-    public FitsDataset(
+    @SuppressWarnings("deprecation")
+		public FitsDataset(
             FileFormat fileFormat,
             BasicHDU hdu,
             String dName,
@@ -144,7 +146,8 @@ public class FitsDataset extends ScalarDS
      * (non-Javadoc)
      * @see hdf.object.DataFormat#getMetadata()
      */
-    public List getMetadata() throws Exception {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+		public List getMetadata() throws Exception {
         if (attributeList != null) {
             return attributeList;
         }
@@ -416,7 +419,8 @@ public class FitsDataset extends ScalarDS
     }
 
     //Implementing DataFormat
-    public List getMetadata(int... attrPropList) throws Exception {
+    @SuppressWarnings("rawtypes")
+		public List getMetadata(int... attrPropList) throws Exception {
         throw new UnsupportedOperationException("getMetadata(int... attrPropList) is not supported");
     }
 }

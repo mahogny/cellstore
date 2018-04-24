@@ -46,12 +46,14 @@ public class NC2File extends FileFormat {
     /**
      * file identifier for the open file.
      */
-    private int fid;
+    @SuppressWarnings("unused")
+		private int fid;
 
     /**
      * the file access flag.
      */
-    private int flag;
+    @SuppressWarnings("unused")
+		private int flag;
 
     /**
      * The root object of the file hierarchy.
@@ -73,7 +75,8 @@ public class NC2File extends FileFormat {
     /**
      * Constructs an NC2File object of given file name with read-only access.
      */
-    public NC2File(String pathname) {
+    @SuppressWarnings("deprecation")
+		public NC2File(String pathname) {
         super(pathname);
 
         isReadOnly = true;
@@ -111,7 +114,8 @@ public class NC2File extends FileFormat {
      * @return true if the given file is an NetCDF file; otherwise returns
      *         false.
      */
-    @Override
+    @SuppressWarnings("null")
+		@Override
     public boolean isThisType(String filename) {
         boolean is_netcdf = false;
         RandomAccessFile raf = null;
@@ -186,7 +190,8 @@ public class NC2File extends FileFormat {
         return 0;
     }
 
-    private HObject loadTree() {
+    @SuppressWarnings("unused")
+		private HObject loadTree() {
 
         long[] oid = { 0 };
         NC2Group rootGroup = new NC2Group(
@@ -200,7 +205,8 @@ public class NC2File extends FileFormat {
             return rootGroup;
         }
 
-        Iterator it = ncFile.getVariables().iterator();
+        @SuppressWarnings("rawtypes")
+				Iterator it = ncFile.getVariables().iterator();
         Variable ncDataset = null;
         DefaultMutableTreeNode node = null;
         NC2Dataset d = null;
@@ -296,13 +302,15 @@ public class NC2File extends FileFormat {
      * @return the treeNode containing the new copy of the dataset.
      */
 
-    private void copyDataset(Dataset srcDataset, NC2Group pgroup)
+    @SuppressWarnings("unused")
+		private void copyDataset(Dataset srcDataset, NC2Group pgroup)
             throws Exception {
         // not supported
         throw new UnsupportedOperationException("Unsupported operation.");
     }
 
-    private void copyGroup(NC2Group srcGroup, NC2Group pgroup)
+    @SuppressWarnings("unused")
+		private void copyGroup(NC2Group srcGroup, NC2Group pgroup)
             throws Exception {
         // not supported
         throw new UnsupportedOperationException("Unsupported operation.");

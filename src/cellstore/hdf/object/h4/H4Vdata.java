@@ -126,7 +126,8 @@ public class H4Vdata extends CompoundDS
      * @param path the full path of this H4Vdata.
      * @param oid the unique identifier of this data object.
      */
-    public H4Vdata(
+    @SuppressWarnings("deprecation")
+		public H4Vdata(
         FileFormat theFile,
         String name,
         String path,
@@ -232,7 +233,7 @@ public class H4Vdata extends CompoundDS
     }
 
     // Implementing DataFormat
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({"rawtypes", "unchecked", "deprecation"})
     @Override
     public Object read() throws HDFException
     {

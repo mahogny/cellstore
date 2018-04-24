@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import cellstore.server.CellStoreMain;
 import cellstore.server.conn.CellStoreConnectionLocal;
+import cellstore.viewer.browser.DataBrowser;
 
 /**
  * 
@@ -23,13 +24,16 @@ public class MainView
 		
 		CellStoreConnectionLocal conn=new CellStoreConnectionLocal(main.db);
 		
+		
 		/*
 		System.out.println("run viewer for clusters");
 		new CellStoreViewer(conn);
 		*/
 		System.out.println("Run viewer for users");
 		new DataBrowser(conn);
-		
+
+		new ViewerClusterDE(conn);
+
 //		new CellStoreViewer(null);
 		}
 

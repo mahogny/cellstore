@@ -98,7 +98,8 @@ public class FitsFile extends FileFormat
      * @param filename the file to be checked.
      * @return true if the given file is an Fits file; otherwise returns false.
      */
-    @Override
+    @SuppressWarnings("null")
+		@Override
     public boolean isThisType(String filename)
     {
         boolean is_fits = false;
@@ -363,13 +364,15 @@ public class FitsFile extends FileFormat
      * @return the treeNode containing the new copy of the dataset.
      */
 
-    private void copyDataset(Dataset srcDataset, FitsGroup pgroup)
+    @SuppressWarnings("unused")
+		private void copyDataset(Dataset srcDataset, FitsGroup pgroup)
          throws Exception {
         // not supported
         throw new UnsupportedOperationException("Unsupported operation.");
     }
 
-    private void copyGroup(FitsGroup srcGroup, FitsGroup pgroup)
+    @SuppressWarnings("unused")
+		private void copyGroup(FitsGroup srcGroup, FitsGroup pgroup)
          throws Exception {
         // not supported
         throw new UnsupportedOperationException("Unsupported operation.");

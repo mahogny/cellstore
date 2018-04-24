@@ -100,4 +100,14 @@ public class GeneNameMapping
 		else
 			return list.getFirst();
 		}
+
+
+	public String getOneSymFor(String id)
+		{
+		LinkedList<String> syms=mapIdSym.get(id);
+		if(!syms.isEmpty())
+			return syms.get(0);
+		else
+			return "";
+		}
 	}

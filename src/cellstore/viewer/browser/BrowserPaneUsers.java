@@ -1,4 +1,4 @@
-package cellstore.viewer;
+package cellstore.viewer.browser;
 
 import java.awt.GridLayout;
 import java.util.Map;
@@ -16,11 +16,11 @@ import cellstore.server.conn.CellStoreConnectionLocal;
  * @author Johan Henriksson
  *
  */
-public class PaneUsers extends JPanel
+public class BrowserPaneUsers extends JPanel
 	{
 	private static final long serialVersionUID = 1L;
 
-	public PaneUsers(CellStoreConnectionLocal conn)
+	public BrowserPaneUsers(CellStoreConnectionLocal conn)
 		{
 		String[] columnNames = {
 				"id",

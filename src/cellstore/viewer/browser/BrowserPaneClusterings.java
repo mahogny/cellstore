@@ -1,4 +1,4 @@
-package cellstore.viewer;
+package cellstore.viewer.browser;
 
 import java.awt.GridLayout;
 import java.util.Map;
@@ -6,7 +6,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import cellstore.db.CellSetFile;
+import cellstore.db.CellClustering;
 import cellstore.db.CellStoreUser;
 import cellstore.server.conn.CellStoreConnectionLocal;
 
@@ -16,11 +16,11 @@ import cellstore.server.conn.CellStoreConnectionLocal;
  * @author Johan Henriksson
  *
  */
-public class PaneCellSets extends JPanel
+public class BrowserPaneClusterings extends JPanel
 	{
 	private static final long serialVersionUID = 1L;
 
-	public PaneCellSets(CellStoreConnectionLocal conn)
+	public BrowserPaneClusterings(CellStoreConnectionLocal conn)
 		{
 		String[] columnNames = {
 				"id",
@@ -28,20 +28,20 @@ public class PaneCellSets extends JPanel
         "Owner"};
 		
 		Map<Integer, CellStoreUser> users=conn.getAllUsers();
-		Map<Integer,CellSetFile> cellsetFiles=conn.getCellSetFiles();
+		Map<Integer,CellClustering> dimreds=conn.getClusterings();
 		
 		
 		
-		int numuser=cellsetFiles.size();
-		Object[][] data = new Object[numuser][];
+		int numDimRed=dimreds.size();
+		Object[][] data = new Object[numDimRed][];
 		int i=0;
-		for(CellSetFile cellset:cellsetFiles.values())
+		for(CellClustering dimred:dimreds.values())
 			{
-			CellStoreUser u=users.get(cellset.ownerID);
+			CellStoreUser u=users.get(dimred.owner);
 			
 			Object[] dat={
-					new Integer(cellset.id),
-					cellset.name,
+					new Integer(dimred.id),
+					dimred.name,
 					u.username
 					};
 			data[i]=dat;
@@ -51,6 +51,8 @@ public class PaneCellSets extends JPanel
 		JTable table = new JTable(data, columnNames);
 		setLayout(new GridLayout(1, 1));
 		table.setDefaultEditor(Object.class, null);
+
+
 		
 		JScrollPane scrollPane = new JScrollPane(table);
 		table.setFillsViewportHeight(true);
@@ -64,7 +66,7 @@ public class PaneCellSets extends JPanel
 	    	JTable table =(JTable) mouseEvent.getSource();
 	    	Point point = mouseEvent.getPoint();
 	    	int row = table.rowAtPoint(point);
-	    	if (mouseEvent.getClickCount() == 2 && row!=-1) //table.getSelectedRow() != -1 
+	    	if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) 
 	    		{
 	    		System.out.println("row "+row);
 		    	// your valueChanged overridden method 

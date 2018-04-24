@@ -190,6 +190,7 @@ public class CellClustering
 			
 			
 			Dataset obCells=(Dataset)f.get("cells");
+			@SuppressWarnings("unchecked")
 			Vector<Object> v=(Vector<Object>)obCells.getData();
 			
 			

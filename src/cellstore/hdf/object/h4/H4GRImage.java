@@ -141,7 +141,8 @@ public class H4GRImage extends ScalarDS
      * @param path the full path of this H4GRImage.
      * @param oid the unique identifier of this data object.
      */
-    public H4GRImage(
+    @SuppressWarnings("deprecation")
+		public H4GRImage(
         FileFormat theFile,
         String name,
         String path,
@@ -431,7 +432,8 @@ public class H4GRImage extends ScalarDS
     }
 
     // Implementing DataFormat
-    @Override
+    @SuppressWarnings("deprecation")
+		@Override
     public void write(Object buf) throws HDFException
     {
         log.trace("write(): start");
@@ -633,7 +635,8 @@ public class H4GRImage extends ScalarDS
     }
 
     // Implementing Dataset.
-    @Override
+    @SuppressWarnings("unused")
+		@Override
     public void init()
     {
         log.trace("init(): start");

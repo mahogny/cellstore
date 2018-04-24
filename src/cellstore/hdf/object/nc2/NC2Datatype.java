@@ -226,7 +226,8 @@ public class NC2Datatype extends Datatype {
     }
 
     //Implementing DataFormat
-    public List getMetadata(int... attrPropList) throws Exception {
+    @SuppressWarnings("rawtypes")
+		public List getMetadata(int... attrPropList) throws Exception {
         throw new UnsupportedOperationException("getMetadata(int... attrPropList) is not supported");
     }
 

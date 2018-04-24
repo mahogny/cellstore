@@ -22,7 +22,7 @@ import cellstore.server.conn.CellStoreConnection;
  * @author Johan Henriksson
  *
  */
-public class ClusterView2D extends JPanel implements MouseMotionListener, MouseListener, MouseWheelListener
+public class PlotProjection extends JPanel implements MouseMotionListener, MouseListener, MouseWheelListener
 	{
 	private static final long serialVersionUID = 1L;
 
@@ -63,7 +63,7 @@ public class ClusterView2D extends JPanel implements MouseMotionListener, MouseL
 	/**
 	 * Constructor
 	 */
-	public ClusterView2D(CellStoreConnection conn)
+	public PlotProjection(CellStoreConnection conn)
 		{
 		this.conn=conn;
 		//dimred=new CellDimRed();
@@ -164,8 +164,6 @@ public class ClusterView2D extends JPanel implements MouseMotionListener, MouseL
 	 */
 	protected void paintComponent(Graphics g)
 		{
-		super.paintComponent(g);
-		
 		//Set background color
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, getWidth(), getHeight());
@@ -217,13 +215,32 @@ public class ClusterView2D extends JPanel implements MouseMotionListener, MouseL
 				g.fillOval(x-r, y-r, r*2, r*2);
 				}
 			
-			
-			
 			if(colorByGene!=null)
 				drawHistogram(g);
 			
+			if(colorByClustering!=null)
+				drawClusterLegend(g);
 			}
 		
+		}
+
+	
+	
+	/**
+	 * Draw colors and names of cluster groups
+	 */
+	private void drawClusterLegend(Graphics g)
+		{
+		CellClustering cc=colorByClustering;
+		for(int i=0;i<cc.getNumGroups();i++)
+			{
+			int y=30+20*i;
+			int x=getWidth()-100;
+			g.setColor(cc.clusterColor[i]);
+			g.fillRect(x, y, 10, 10);
+			g.setColor(Color.BLACK);
+			g.drawString(cc.clusterNames[i], x+15, y+10);
+			}
 		}
 
 	/**

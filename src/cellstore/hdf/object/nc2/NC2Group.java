@@ -39,7 +39,8 @@ public class NC2Group extends Group {
      * The list of attributes of this data object. Members of the list are
      * instance of Attribute.
      */
-    private List attributeList;
+    @SuppressWarnings("rawtypes")
+		private List attributeList;
 
     /** The default object ID for HDF5 objects */
     private final static long[] DEFAULT_OID = { 0 };
@@ -58,7 +59,8 @@ public class NC2Group extends Group {
      * @param oid
      *            the unique identifier of this data object.
      */
-    public NC2Group(FileFormat fileFormat, String name, String path,
+    @SuppressWarnings("deprecation")
+		public NC2Group(FileFormat fileFormat, String name, String path,
             Group parent, long[] theID) {
         super(fileFormat, name, path, parent, ((theID == null) ? DEFAULT_OID
                 : theID));
@@ -74,7 +76,8 @@ public class NC2Group extends Group {
     }
 
     // Implementing DataFormat
-    public List getMetadata() throws Exception {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+		public List getMetadata() throws Exception {
         if (!isRoot()) {
             return null;
         }
@@ -171,7 +174,8 @@ public class NC2Group extends Group {
     }
 
     //Implementing DataFormat
-    public List getMetadata(int... attrPropList) throws Exception {
+    @SuppressWarnings("rawtypes")
+		public List getMetadata(int... attrPropList) throws Exception {
         throw new UnsupportedOperationException("getMetadata(int... attrPropList) is not supported");
     }
 

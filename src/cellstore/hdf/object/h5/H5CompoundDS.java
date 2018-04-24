@@ -1185,7 +1185,8 @@ public class H5CompoundDS extends CompoundDS {
      *
      * @see hdf.object.DataFormat#getMetadata(int...)
      */
-    public List<Attribute> getMetadata(int... attrPropList) throws HDF5Exception {
+    @SuppressWarnings("unused")
+		public List<Attribute> getMetadata(int... attrPropList) throws HDF5Exception {
         log.trace("getMetadata(): start");
 
         if (rank <= 0) {
