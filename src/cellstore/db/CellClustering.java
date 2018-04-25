@@ -1,10 +1,14 @@
 package cellstore.db;
 
 import java.awt.Color;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.Vector;
 
@@ -17,8 +21,10 @@ import cellstore.hdf.object.h5.H5File;
  * @author Johan Henriksson
  *
  */
-public class CellClustering
+public class CellClustering implements Serializable
 	{
+	private static final long serialVersionUID = 1L;
+	
 	public int owner;
 	public int id;
 	public String name;
@@ -31,11 +37,17 @@ public class CellClustering
 	public Color clusterColor[];
 
 	/**
+	 * Marker genes for each cluster
+	 */
+	public HashMap<Integer, DiffExp> clusterMarkergenes=new HashMap<>();
+
+	/**
 	 * Which cluster each cell belongs to
 	 */
 	public int[] indexCellSet;
 	public int[] indexCell;
 	public int[] clusterID;
+	
 
 	
 	
@@ -230,6 +242,69 @@ public class CellClustering
 	
 	
 	
+	/**
+	 * 
+	 * Read a clustering from CSV, assuming it all refers to a single cellset
+	 * 
+	 * @param f
+	 * @param cellset
+	 * @return
+	 * @throws IOException
+	 */
+	public static CellClustering readClusteringFromCSV(CellClustering clustering, File f, CellSetFile cellset) throws IOException
+		{
+		BufferedReader bi=new BufferedReader(new FileReader(f));
+		
+		String xName="cluster_cd45minus";
+		
+		//clustering.cellsets.add(cellset);
+		
+		ArrayList<Integer> cellsetIndex=new ArrayList<Integer>();
+		ArrayList<Integer> cellsetCell=new ArrayList<Integer>();
+		ArrayList<String> cluster=new ArrayList<String>();
+	
+		
+		////// Read the header and figure out which columns are the x & y axis
+		int xi=-1;
+		StringTokenizer stok=new StringTokenizer(bi.readLine(), ",");
+		stok.nextToken();  //bit scary that I skip it!
+		for(int i=0;stok.hasMoreTokens();i++)
+			{
+			String s=stok.nextToken();
+			//System.out.println("---"+s);
+			if(s.equals(xName))
+				xi=i;
+			}
+		//System.out.println("Got index "+xi+"   "+yi);
+		
+		////// Read the positions
+		String line;
+		while((line=bi.readLine())!=null)
+			{
+			stok=new StringTokenizer(line, ",");
+			String geneName=stok.nextToken();
+	
+			String thecluster="";
+			
+			for(int i=0;stok.hasMoreTokens();i++)
+				{
+				String s=stok.nextToken();
+				if(i==xi)
+					thecluster=s;
+				}
+			
+			cellsetIndex.add(cellset.id);
+			cellsetCell.add(cellset.getCellSet().getIndexOfCell(geneName));
+			cluster.add(thecluster);
+			}
+		
+		clustering.set(cellsetIndex,cellsetCell, cluster);
+		
+		bi.close();
+		return clustering;
+		}
+
+
 	public static Color parseColor(String s)
 		{
 		int r = Integer.parseInt(s.substring(1,3), 16);

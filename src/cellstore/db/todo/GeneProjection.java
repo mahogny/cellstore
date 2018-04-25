@@ -8,7 +8,7 @@ package cellstore.db.todo;
  * @author Johan Henriksson
  *
  */
-public class GeneDimRed
+public class GeneProjection
 	{
 
 	}

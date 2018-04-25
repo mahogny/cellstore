@@ -3,11 +3,17 @@ package cellstore.r;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
+import cellstore.db.CellClustering;
+import cellstore.db.CellProjection;
+import cellstore.server.CellStorePortListener;
 import cellstore.server.conn.CellStoreConnection;
 import cellstore.server.conn.CellStoreConnectionServer;
 
 /**
  * Connection object for R
+ * 
+ * Can possible share this code with python?
+ * 
  * 
  * @author Johan Henriksson
  *
@@ -39,12 +45,17 @@ public class RCellStore
 			}
 		catch (IOException e)
 			{
-			System.out.println(e);
 			e.printStackTrace();
 			}
 		return false;
 		}
+
 	
+	public boolean init(String address)
+		{
+		return init(address, CellStorePortListener.DEFAULT_PORT);
+		}
+
 	/**
 	 * 
 	 * Authenticate connection
@@ -53,7 +64,7 @@ public class RCellStore
 	 * @param password
 	 * @return
 	 */
-	public boolean init(String user, String password)
+	public boolean authenticate(String user, String password)
 		{
 		try
 			{
@@ -61,7 +72,6 @@ public class RCellStore
 			}
 		catch (IOException e)
 			{
-			System.out.println(e.getMessage());
 			e.printStackTrace();
 			}
 		return false;
@@ -78,6 +88,37 @@ public class RCellStore
 		{
 		
 		return true;
+		}
+
+
+	public boolean uploadProjection(double[] matrix, int[] matrixDim, String name)
+		{
+		//[1,2;
+		//[3,4]  becomes [1,2,3,4]
+		
+		
+		try
+			{
+			CellProjection p=new CellProjection();
+			p.name=name;
+
+			System.out.println("Uploading projection");
+			
+			conn.putProjection(p);
+			
+			return true;
+			}
+		catch (IOException e)
+			{
+			e.printStackTrace();
+			return false;
+			}
+		}
+
+
+	public CellClustering getClustering(int i) throws IOException
+		{
+		return conn.getClustering(i);
 		}
 
 	

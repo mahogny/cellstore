@@ -1,10 +1,11 @@
 package cellstore.server.conn;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 
 import cellstore.db.CellClustering;
-import cellstore.db.CellDimRed;
+import cellstore.db.CellProjection;
 import cellstore.db.CellSetFile;
 import cellstore.db.CellStoreDB;
 import cellstore.db.CellStoreDatasets;
@@ -27,14 +28,14 @@ public class CellStoreConnectionLocal implements CellStoreConnection
 	
 
 	@Override
-	public CellDimRed getDimRed(int i)
+	public CellProjection getProjection(int i)
 		{
-		return db.datasets.dimreds.get(i);
+		return db.datasets.projections.get(i);
 		}
 
-	public Map<Integer, CellDimRed> getDimReds()
+	public Map<Integer, CellProjection> getDimReds()
 		{
-		return db.datasets.dimreds;
+		return db.datasets.projections;
 		}
 
 	@Override
@@ -84,5 +85,12 @@ public class CellStoreConnectionLocal implements CellStoreConnection
 	public boolean authenticate(String user, String password)
 		{
 		return true;
+		}
+
+
+	@Override
+	public Integer putProjection(CellProjection p) throws IOException
+		{
+		throw new IOException("not implemented");
 		}
 	}

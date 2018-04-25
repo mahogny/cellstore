@@ -72,8 +72,6 @@ public class BrowserPaneStudies extends JPanel
 	    	int row = table.rowAtPoint(point);
 	    	if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) 
 	    		{
-	    		System.out.println("row "+row);
-	    		
 	    		int id=(Integer)table.getModel().getValueAt(row, 0);
 	    		
 	    		

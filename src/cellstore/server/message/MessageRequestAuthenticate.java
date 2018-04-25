@@ -2,9 +2,10 @@ package cellstore.server.message;
 
 import java.io.Serializable;
 import cellstore.db.CellStoreUser;
+import cellstore.server.CellStoreMain;
 import cellstore.server.ClientThread;
 import cellstore.server.response.Response;
-import cellstore.server.response.ResponsePassFail;
+import cellstore.server.response.ResponseAuthChallenge;
 
 /**
  * 
@@ -20,20 +21,22 @@ public class MessageRequestAuthenticate extends Message implements Serializable
 	public String username;
 		
 	@Override
-	public Response handleOnServer(ClientThread client)
+	public Response handleOnServer(ClientThread client, CellStoreMain main)
 		{
-		ResponsePassFail resp=new ResponsePassFail();
+		ResponseAuthChallenge resp=new ResponseAuthChallenge();
+		resp.moresalt=""+Math.random();
 		
 		CellStoreUser u=client.db.getUser(username);
 		if(u!=null)
 			{
-			resp.passed=true;
-			client.userID=u.id;
+			resp.salt=u.salt;
 			}
 		else
 			{
-			resp.passed=false;
+			//Based on this, the client can tell if the user exists or not. Messy to fix
+			resp.salt="";
 			}
+		
 		return resp;
 		}
 

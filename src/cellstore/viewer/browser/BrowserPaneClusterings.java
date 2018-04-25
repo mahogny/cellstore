@@ -68,7 +68,6 @@ public class BrowserPaneClusterings extends JPanel
 	    	int row = table.rowAtPoint(point);
 	    	if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) 
 	    		{
-	    		System.out.println("row "+row);
 		    	// your valueChanged overridden method 
 		    	}
 	    	}

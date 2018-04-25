@@ -118,7 +118,6 @@ public class GeneexpStoreHdf
 			if(f.isDirectory())
 				{
 				int id=Integer.parseInt(f.getName());
-				System.out.println(id);
 				GeneexpStoreHdf h=new GeneexpStoreHdf(new File(f,"expdata.h5ad"));
 				CellSetFile csf=new CellSetFile();
 				csf.id=id;

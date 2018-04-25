@@ -1,6 +1,11 @@
 package cellstore.db;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 import java.util.TreeMap;
 
 import cellstore.hdf.GeneexpStoreHdf;
@@ -115,6 +120,61 @@ public class CellSetFile
 	public void setCellSet(CellSet cellset)
 		{
 		this.cellset=cellset;
+		}
+
+
+	/**
+	 * Read a count table from CSV file
+	 */
+	public static CellSet readCountTableFromCSV(File f) throws IOException
+		{
+		CellSet cellset=new CellSet();
+		
+		BufferedReader bi=new BufferedReader(new FileReader(f));
+	
+		//First all the cell names
+		StringTokenizer stok=new StringTokenizer(bi.readLine(), ",");
+		//stok.nextToken();  //scare to skip
+		ArrayList<String> listCellNames=new ArrayList<String>();
+		while(stok.hasMoreTokens())
+			listCellNames.add(stok.nextToken());
+		
+		ArrayList<String> geneNames=new ArrayList<String>();
+		ArrayList<GeneLinCounts> countList=new ArrayList<GeneLinCounts>();
+		
+		//For all genes
+		String line;
+		while((line=bi.readLine())!=null)
+			{
+			stok=new StringTokenizer(line, ",");
+			
+			String geneName=stok.nextToken();
+			geneNames.add(geneName);
+			
+			ArrayList<Integer> cellid=new ArrayList<Integer>(listCellNames.size());
+			ArrayList<Double> counts=new ArrayList<Double>(listCellNames.size());
+			for(int i=0;i<listCellNames.size();i++)
+				{
+				double count=Double.parseDouble(stok.nextToken());
+				if(count!=0)
+					{
+					cellid.add(i);
+					counts.add(count);
+					}
+				}
+			
+			GeneLinCounts cnt=new GeneLinCounts();
+			cnt.set(cellid,counts);
+			
+			countList.add(cnt);
+			}
+		
+		cellset.cellnames=listCellNames.toArray(new String[]{});
+		cellset.genename=geneNames.toArray(new String[]{});
+		//cellset.geneCount=countList.toArray(new GeneLinCounts[]{});
+		
+		bi.close();
+		return cellset;
 		}
 		
 	

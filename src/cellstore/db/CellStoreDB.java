@@ -3,6 +3,7 @@ package cellstore.db;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 
 import javax.json.Json;
@@ -43,10 +44,21 @@ public class CellStoreDB
 	 */
 	public int getFreeUserID()
 		{
+		return getFreeID(user.keySet());
+		}
+
+	/**
+	 * Get the next free integer ID, for any set
+	 * 
+	 * @param existingIDs
+	 * @return
+	 */
+	private static int getFreeID(Collection<Integer> existingIDs)
+		{
 		int i=1;
 		for(;;)
 			{
-			if(!user.keySet().contains(i))
+			if(!existingIDs.contains(i))
 				return i;
 			i++;
 			}
@@ -102,5 +114,20 @@ public class CellStoreDB
 			}
 		return null;
 		}
+
+	/**
+	 * Store a cell projection
+	 * 
+	 * @param projection
+	 * @return
+	 */
+	public int putNewCellProjection(CellProjection projection)
+		{
+		int newid=getFreeID(datasets.projections.keySet());
+		datasets.projections.put(newid, projection);
+		return newid;
+		}
+	
+
 
 	}

@@ -243,7 +243,7 @@ public class ViewerProjection extends JFrame implements ActionListener, KeyListe
 		{
 		try
 			{
-			view.dimred=conn.getDimRed(id);
+			view.dimred=conn.getProjection(id);
 			fillComboColorBy();
 			view.adjustScale();
 			updateViewInfo();

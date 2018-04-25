@@ -2,33 +2,34 @@ package cellstore.server.message;
 
 import java.io.Serializable;
 
+import cellstore.db.CellProjection;
 import cellstore.server.CellStoreMain;
 import cellstore.server.ClientThread;
 import cellstore.server.response.Response;
-import cellstore.server.response.ResponseListClusterings;
+import cellstore.server.response.ResponseListProjections;
+import cellstore.server.response.ResponsePassFail;
 
 /**
  * 
- * Message to server: Get a list of clusterings
+ * Message to server: Get one DimRed
  * 
  * @author Johan Henriksson
  *
  */
-public class MessageGetClusterings extends Message implements Serializable
+public class MessagePutProjection extends Message implements Serializable
 	{
 	private static final long serialVersionUID = 1L;
 	
-	//TODO make it a list
 	public int id=-1;
-
+	
+	public CellProjection projection;
+	
 	@Override
 	public Response handleOnServer(ClientThread client, CellStoreMain main)
 		{
-		ResponseListClusterings resp=new ResponseListClusterings();
-		if(id>=0)
-			resp.list.put(id, client.db.datasets.clusterings.get(id));
-		else
-			resp.list.putAll(client.db.datasets.clusterings);
+		ResponsePassFail resp=new ResponsePassFail();
+		resp.id=main.db.putNewCellProjection(projection);
+		resp.passed=true;
 		return resp;
 		}
 

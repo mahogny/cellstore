@@ -1,5 +1,6 @@
 package cellstore.db;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 
@@ -10,8 +11,10 @@ import java.security.MessageDigest;
  * @author Johan Henriksson
  *
  */
-public class CellStoreUser
+public class CellStoreUser implements Serializable
 	{
+	private static final long serialVersionUID = 1L;
+	
 	public int id;
 	public String name;
 	public String username;

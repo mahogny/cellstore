@@ -11,7 +11,7 @@ import java.awt.event.MouseWheelListener;
 import javax.swing.JPanel;
 
 import cellstore.db.CellClustering;
-import cellstore.db.CellDimRed;
+import cellstore.db.CellProjection;
 import cellstore.db.CellSet;
 import cellstore.db.CellSetFile;
 import cellstore.server.conn.CellStoreConnection;
@@ -57,7 +57,7 @@ public class PlotProjection extends JPanel implements MouseMotionListener, Mouse
 	 */
 	
 
-	public CellDimRed dimred;
+	public CellProjection dimred;
 	private CellStoreConnection conn;
 
 	/**

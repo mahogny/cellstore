@@ -17,5 +17,6 @@ public class CellStoreDatasets
 	
 	public TreeMap<Integer,CellSetFile> cellsets=new TreeMap<Integer, CellSetFile>();
 	public TreeMap<Integer,CellClustering> clusterings=new TreeMap<Integer, CellClustering>();
-	public TreeMap<Integer,CellDimRed> dimreds=new TreeMap<Integer, CellDimRed>();
+	public TreeMap<Integer,CellProjection> projections=new TreeMap<Integer, CellProjection>();
+	public TreeMap<Integer,CellConnectivity> connectivity=new TreeMap<Integer, CellConnectivity>();
 	}

@@ -1,23 +1,22 @@
 package cellstore.server;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
+import java.util.HashSet;
+
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 
 import cellstore.db.CellClustering;
-import cellstore.db.CellDimRed;
+import cellstore.db.CellConnectivity;
+import cellstore.db.CellProjection;
 import cellstore.db.CellSet;
 import cellstore.db.CellSetFile;
 import cellstore.db.CellStoreDB;
-import cellstore.db.GeneLinCounts;
 import cellstore.hdf.GeneexpStoreHdf;
+import cellstore.r.RCellStore;
 
 /**
  * Running of the database only
@@ -29,14 +28,16 @@ public class CellStoreMain
 	{
 	public CellStoreDB db=new CellStoreDB();
 
+	HashSet<CellStorePortListener> listeners=new HashSet<>();
+	
 	public CellStoreMain() throws IOException
 		{
 		db.readUsers();
 		
-		//later problem
 		scanDataCellSet();
-		scanDataClust();
-		scanDataDimred();
+		scanDataClusterings();
+		scanDataProjections();
+		scanDataConnectivity();
 		}
 	
 
@@ -75,7 +76,7 @@ public class CellStoreMain
 					}
 				else if(filecsv.exists())
 					{
-					CellSet cellset=readCountTable(filecsv);
+					CellSet cellset=CellSetFile.readCountTableFromCSV(filecsv);
 					csf.setCellSet(cellset);
 					}
 				else
@@ -90,7 +91,7 @@ public class CellStoreMain
 	 * 
 	 * @throws IOException
 	 */
-	public void scanDataDimred() throws IOException
+	public void scanDataProjections() throws IOException
 		{
 		File fexpdir=new File("data/dimred");
 		for(File f:fexpdir.listFiles())
@@ -99,7 +100,7 @@ public class CellStoreMain
 				int id=Integer.parseInt(f.getName());
 				System.out.println(id);
 				
-				CellDimRed dimred=new CellDimRed();
+				CellProjection dimred=new CellProjection();
 				
 				//// Read the metadata
 				FileInputStream is=new FileInputStream(new File(f,"info.json"));
@@ -121,16 +122,22 @@ public class CellStoreMain
 				else if(filecsv.exists())
 					{
 					CellSetFile cellset=db.datasets.cellsets.get(relatedto);//.getCellSet();
-					readDimRed(dimred, filecsv, cellset);
+					CellProjection.readProjectFromCSV(dimred, filecsv, cellset);
 					}
 				else
 					throw new IOException("Invalid dimred");
-				db.datasets.dimreds.put(id,dimred);
+				db.datasets.projections.put(id,dimred);
 				}
 		}
 		
 	
-	public void scanDataClust() throws IOException
+	/**
+	 * 
+	 * Scan for clusterings
+	 * 
+	 * @throws IOException
+	 */
+	public void scanDataClusterings() throws IOException
 		{
 		File fexpdir=new File("data/clustering");
 		for(File f:fexpdir.listFiles())
@@ -161,218 +168,112 @@ public class CellStoreMain
 				else if(filecsv.exists())
 					{
 					CellSetFile cellset=db.datasets.cellsets.get(relatedto);//.getCellSet();
-					readClustering(clust, filecsv, cellset);
+					CellClustering.readClusteringFromCSV(clust, filecsv, cellset);
 					}
 				else
 					throw new IOException("Invalid cell clustering");
 				db.datasets.clusterings.put(id,clust);
 				}
-
 		}
 		
 	
+
+	/**
+	 * 
+	 * Scan for clusterings
+	 * 
+	 * @throws IOException
+	 */
+	public void scanDataConnectivity() throws IOException
+		{
+		File fexpdir=new File("data/connectivity");
+		for(File f:fexpdir.listFiles())
+			if(f.isDirectory())
+				{
+				int id=Integer.parseInt(f.getName());
+				System.out.println(id);
+				
+				CellConnectivity connectivity=new CellConnectivity();
+				
+				//// Read the metadata
+				FileInputStream is=new FileInputStream(new File(f,"info.json"));
+				JsonReader rdr = Json.createReader(is);
+				JsonObject result = rdr.readObject();
+				connectivity.name=result.getString("name");
+				connectivity.owner=result.getInt("owner");
+				connectivity.id=id;
+				int relatedto=result.getInt("relatedto");
+				is.close();
+				
+				//// Attach the data
+				File fileh=new File(f,"connectivity.h5");
+				File filecsv=new File(f,"connectivity.csv");
+				if(fileh.exists())
+					{
+					//clust.fromHdf(fileh, relatedto, db);
+					throw new IOException("not implemented");
+					}
+				else if(filecsv.exists())
+					{
+					CellSetFile cellset=db.datasets.cellsets.get(relatedto);//.getCellSet();
+					CellConnectivity.readFromCSV(connectivity, filecsv, cellset);
+					}
+				else
+					throw new IOException("Invalid cell clustering");
+				db.datasets.connectivity.put(id,connectivity);
+				}
+		}
+
+	
+	
+	/**
+	 * Open port for incoming connections
+	 * 
+	 * @throws IOException
+	 */
+	public void openPort() throws IOException
+		{
+		CellStorePortListener listener=new CellStorePortListener(this);
+		listener.start();
+		listeners.add(listener);
+		}
+	
+	
+	/**
+	 * Run server
+	 * 
+	 * @param args
+	 * @throws IOException
+	 */
 	public static void main(String[] args) throws IOException
 		{
-		new CellStoreMain();
-		}
-	
-	
-	
-	
-	/**
-	 * 
-	 * Read a clustering from CSV, assuming it all refers to a single cellset
-	 * 
-	 * @param f
-	 * @param cellset
-	 * @return
-	 * @throws IOException
-	 */
-	public CellClustering readClustering(CellClustering clustering, File f, CellSetFile cellset) throws IOException
-		{
-		BufferedReader bi=new BufferedReader(new FileReader(f));
-		
-		String xName="cluster_cd45minus";
-		
-		//clustering.cellsets.add(cellset);
-		
-		ArrayList<Integer> cellsetIndex=new ArrayList<Integer>();
-		ArrayList<Integer> cellsetCell=new ArrayList<Integer>();
-		ArrayList<String> cluster=new ArrayList<String>();
-
-		
-		////// Read the header and figure out which columns are the x & y axis
-		int xi=-1;
-		StringTokenizer stok=new StringTokenizer(bi.readLine(), ",");
-		stok.nextToken();  //bit scary that I skip it!
-		for(int i=0;stok.hasMoreTokens();i++)
+		System.out.println("---------- Starting CellStore ------------");
+		CellStoreMain main=new CellStoreMain();
+		main.openPort();		
+		System.out.println("---------- Port opened -------------------");
+		try
 			{
-			String s=stok.nextToken();
-			//System.out.println("---"+s);
-			if(s.equals(xName))
-				xi=i;
+			Thread.sleep(1000);
 			}
-		//System.out.println("Got index "+xi+"   "+yi);
-		
-		////// Read the positions
-		String line;
-		while((line=bi.readLine())!=null)
+		catch (InterruptedException e)
 			{
-			stok=new StringTokenizer(line, ",");
-			String geneName=stok.nextToken();
-
-			String thecluster="";
-			
-			for(int i=0;stok.hasMoreTokens();i++)
-				{
-				String s=stok.nextToken();
-				if(i==xi)
-					thecluster=s;
-				}
-			
-			cellsetIndex.add(cellset.id);
-			cellsetCell.add(cellset.getCellSet().getIndexOfCell(geneName));
-			cluster.add(thecluster);
-			}
+			} 
+		System.out.println("---------- Testing connection -------------------");
 		
-		clustering.set(cellsetIndex,cellsetCell, cluster);
+		RCellStore rcs=new RCellStore();
+		rcs.init("localhost");
 		
-		bi.close();
-		return clustering;
-		}
+//		System.out.println("did init. now auth:");
+//		rcs.authenticate("mahogny", "123");
 		
-	
-
-	
-	
-	/**
-	 * 
-	 * Read a dimensionality reduction from CSV, assuming it all refers to a single cellset
-	 * 
-	 * @param f
-	 * @param cellset
-	 * @return
-	 * @throws IOException
-	 */
-	public CellDimRed readDimRed(CellDimRed dimred, File f, CellSetFile cellset) throws IOException
-		{
-		BufferedReader bi=new BufferedReader(new FileReader(f));
-		
-		String xName="PC1_cd45minus";
-		String yName="PC2_cd45minus";
-		
-		//CellDimRed dimred=new CellDimRed();
-		//dimred.cellsets.add(cellset);
-		
-		ArrayList<Integer> cellsetIndex=new ArrayList<Integer>();
-		ArrayList<Integer> cellsetCell=new ArrayList<Integer>();
-		ArrayList<Double> x=new ArrayList<Double>();
-		ArrayList<Double> y=new ArrayList<Double>();
-
-		
-		////// Read the header and figure out which columns are the x & y axis
-		int xi=-1;
-		int yi=-1;
-		StringTokenizer stok=new StringTokenizer(bi.readLine(), ",");
-		//stok.nextToken();  //bit scare that I skip it!
-		for(int i=0;stok.hasMoreTokens();i++)
-			{
-			String s=stok.nextToken();
-			//System.out.println("---"+s);
-			if(s.equals(xName))
-				xi=i;
-			if(s.equals(yName))
-				yi=i;
-			}
-		//System.out.println("Got index "+xi+"   "+yi);
-		
-		////// Read the positions
-		String line;
-		while((line=bi.readLine())!=null)
-			{
-			stok=new StringTokenizer(line, ",");
-			String geneName=stok.nextToken();
-
-			double theX=0;
-			double theY=0;
-			
-			
-			for(int i=0;stok.hasMoreTokens();i++)
-				{
-				String s=stok.nextToken();
-				if(i==xi)
-					theX=Double.parseDouble(s);
-				if(i==yi)
-					theY=Double.parseDouble(s);
-				}
-			
-			cellsetIndex.add(cellset.id);
-			cellsetCell.add(cellset.getCellSet().getIndexOfCell(geneName));
-			x.add(theX);
-			y.add(theY);
-			}
-		
-		dimred.set(cellsetIndex,cellsetCell, x,y);
+		System.out.println(rcs.getClustering(0));
 		
 		
-		bi.close();
-		return dimred;
-		}
 		
-	
-	
-	/**
-	 * Read a count table from CSV file
-	 */
-	public CellSet readCountTable(File f) throws IOException
-		{
-		CellSet cellset=new CellSet();
+		System.out.println("---------- Done -------------------");
 		
-		BufferedReader bi=new BufferedReader(new FileReader(f));
-
-		//First all the cell names
-		StringTokenizer stok=new StringTokenizer(bi.readLine(), ",");
-		//stok.nextToken();  //scare to skip
-		ArrayList<String> listCellNames=new ArrayList<String>();
-		while(stok.hasMoreTokens())
-			listCellNames.add(stok.nextToken());
+//		System.exit(0);
 		
-		ArrayList<String> geneNames=new ArrayList<String>();
-		ArrayList<GeneLinCounts> countList=new ArrayList<GeneLinCounts>();
-		
-		//For all genes
-		String line;
-		while((line=bi.readLine())!=null)
-			{
-			stok=new StringTokenizer(line, ",");
-			
-			String geneName=stok.nextToken();
-			geneNames.add(geneName);
-			
-			ArrayList<Integer> cellid=new ArrayList<Integer>(listCellNames.size());
-			ArrayList<Double> counts=new ArrayList<Double>(listCellNames.size());
-			for(int i=0;i<listCellNames.size();i++)
-				{
-				double count=Double.parseDouble(stok.nextToken());
-				if(count!=0)
-					{
-					cellid.add(i);
-					counts.add(count);
-					}
-				}
-			
-			GeneLinCounts cnt=new GeneLinCounts();
-			cnt.set(cellid,counts);
-			
-			countList.add(cnt);
-			}
-		
-		cellset.cellnames=listCellNames.toArray(new String[]{});
-		cellset.genename=geneNames.toArray(new String[]{});
-		//cellset.geneCount=countList.toArray(new GeneLinCounts[]{});
-		
-		bi.close();
-		return cellset;
 		}
 		
 	}

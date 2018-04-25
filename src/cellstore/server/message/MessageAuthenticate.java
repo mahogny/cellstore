@@ -2,6 +2,7 @@ package cellstore.server.message;
 
 import java.io.Serializable;
 import cellstore.db.CellStoreUser;
+import cellstore.server.CellStoreMain;
 import cellstore.server.ClientThread;
 import cellstore.server.response.Response;
 import cellstore.server.response.ResponseAuthChallenge;
@@ -33,7 +34,7 @@ public class MessageAuthenticate extends Message implements Serializable
 		}
 		
 	@Override
-	public Response handleOnServer(ClientThread client)
+	public Response handleOnServer(ClientThread client, CellStoreMain main)
 		{
 		ResponsePassFail resp=new ResponsePassFail();
 		

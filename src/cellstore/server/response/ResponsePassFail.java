@@ -14,4 +14,5 @@ public class ResponsePassFail implements Response, Serializable
 	private static final long serialVersionUID = 1L;
 
 	public boolean passed;
+	public Integer id=-1;
 	}

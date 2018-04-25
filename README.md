@@ -40,9 +40,18 @@ TODO list
 
 * tab: cellsets - add delete button
 
-* add tab: clusterings
+*  tab: clusterings
 **	delete button
 
-* add tab: dimension reductions
+* tab: dimension reductions
 ** delete button
 ** double click on dimred to open cluster viewer (needs major cleanup)
+
+* favourite genes. see db/todo/
+** load/save in json
+** include drop-down menu in projection view
+** projection view, in menu, option to add current gene
+
+* violin or jitter (easiest) plots of gene levels, for each cluster, in a panel below in projection view
+** may need a horizontal scrollbar
+** button to turn on/off

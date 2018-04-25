@@ -1,7 +1,5 @@
 package cellstore.server;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -18,56 +16,89 @@ import cellstore.server.response.Response;
  */
 public class ClientThread extends Thread
 	{
-	private DataInputStream dis;
-	private DataOutputStream dos;
+	private ObjectInputStream dis;
+	private ObjectOutputStream dos;
 	private Socket clientSocket;
 	
 	public int userID;
 	
 	public boolean shutdown=false;
 	public CellStoreDB db;
+	private CellStoreMain main;
 	
-	public ClientThread(CellStoreDB db)
+
+	/**
+	 * Constructor of a communication thread
+	 * 
+	 * @param main
+	 * @param clientSocket
+	 * @throws IOException
+	 */
+	public ClientThread(CellStoreMain main, Socket clientSocket) throws IOException
 		{
-		this.db=db;
-		}
-	
-	
-	public ClientThread(Socket clientSocket) throws IOException
-		{
+		this.main=main;
+		this.db=main.db;
 		this.clientSocket=clientSocket;
-		dis=new DataInputStream(clientSocket.getInputStream());
-		dos=new DataOutputStream(clientSocket.getOutputStream());
+		
+		dis=new ObjectInputStream(clientSocket.getInputStream());
+		dos=new ObjectOutputStream(clientSocket.getOutputStream());
+
+		//Version of the server
+		dos.writeUTF("CellStore");
+		dos.writeByte(1);
+		dos.flush();
+				
+		System.out.println("Connection to server ready");
 		}
 	
+	
+	
+	/**
+	 * Send a message
+	 * 
+	 * @param m
+	 * @throws IOException
+	 */
 	public void send(Message m) throws IOException
 		{
-		ObjectOutputStream oos=new ObjectOutputStream(dos);
-		oos.writeObject(m);
-		oos.flush();
+		dos.writeObject(m);
+		dos.flush();
 		}
 	
+	
+	
+	/**
+	 * Run and keep accepting messages
+	 */
 	@Override
 	public void run()
 		{
 		try
 			{
-			//Write version of server
-			dos.writeInt(666);
-			
 			while(!shutdown)
 				{
+				/*
+				dos.writeInt(666);
+				dos.writeShort(777);
+				dos.writeUTF("foo");
+				dos.flush();*/
+				
+				
 				//Get a message
-				ObjectInputStream ois=new ObjectInputStream(dis);
-				Message m=(Message)ois.readObject();
-				Response resp=m.handleOnServer(this);
+				Message m=(Message)dis.readObject();
+				//System.out.println("Server got message "+m);
+				Response resp=m.handleOnServer(this, main);
+				
+				
 				//Send back response
 				if(resp!=null)
 					{
-					ObjectOutputStream oos=new ObjectOutputStream(dos);
-					oos.writeObject(resp);
-					oos.flush();
+					//System.out.println("Server sending back response "+resp);
+					dos.writeObject(resp);
+					dos.flush();
 					}
+				else
+					System.out.println("No response to client");
 				}
 			
 			clientSocket.close();
