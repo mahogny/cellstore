@@ -1,7 +1,10 @@
 package cellstore.viewer.browser;
 
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.util.Map;
+
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -9,6 +12,7 @@ import javax.swing.JTable;
 import cellstore.db.CellClustering;
 import cellstore.db.CellStoreUser;
 import cellstore.server.conn.CellStoreConnectionLocal;
+import util.EvSwingUtil;
 
 /**
  * A view of all the cellsets in the database
@@ -19,6 +23,8 @@ import cellstore.server.conn.CellStoreConnectionLocal;
 public class BrowserPaneClusterings extends JPanel
 	{
 	private static final long serialVersionUID = 1L;
+	
+	private JButton cDelete=new JButton("Delete");
 
 	public BrowserPaneClusterings(CellStoreConnectionLocal conn)
 		{
@@ -52,11 +58,23 @@ public class BrowserPaneClusterings extends JPanel
 		setLayout(new GridLayout(1, 1));
 		table.setDefaultEditor(Object.class, null);
 
+		//bDelete.addActionListener(this);
+
 
 		
 		JScrollPane scrollPane = new JScrollPane(table);
 		table.setFillsViewportHeight(true);
 		add(scrollPane);
+		
+		JPanel pButtons=new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		pButtons.add(cDelete);
+		setLayout(new GridLayout(1, 1));
+		add(EvSwingUtil.layoutACB(
+				null, 
+				scrollPane, 
+				pButtons));
+		
+
 
 		/*
 		table.addMouseListener(new MouseAdapter() 

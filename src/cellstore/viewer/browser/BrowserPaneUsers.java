@@ -1,14 +1,17 @@
 package cellstore.viewer.browser;
 
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.util.Map;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import cellstore.db.CellStoreUser;
 import cellstore.server.conn.CellStoreConnectionLocal;
+import util.EvSwingUtil;
 
 /**
  * A view of all the users in the database
@@ -20,6 +23,8 @@ public class BrowserPaneUsers extends JPanel
 	{
 	private static final long serialVersionUID = 1L;
 
+	private JButton bDelete=new JButton("Delete");
+	
 	public BrowserPaneUsers(CellStoreConnectionLocal conn)
 		{
 		String[] columnNames = {
@@ -48,9 +53,20 @@ public class BrowserPaneUsers extends JPanel
 		setLayout(new GridLayout(1, 1));
 		table.setDefaultEditor(Object.class, null);
 		
+		//bDelete.addActionListener(this);
+		
 		JScrollPane scrollPane = new JScrollPane(table);
 		table.setFillsViewportHeight(true);
 		add(scrollPane);
+		
+		JPanel pButtons=new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		pButtons.add(bDelete);
+		
+		setLayout(new GridLayout(1, 1));
+		add(EvSwingUtil.layoutACB(
+				null, 
+				scrollPane, 
+				pButtons));
 		
 		//table.getTableHeader().setVisible(true);
 		}
