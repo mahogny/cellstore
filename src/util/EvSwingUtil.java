@@ -125,6 +125,7 @@ public class EvSwingUtil
 		return p;*/
 		}
 	
+	
 	public static JComponent layoutCompactVertical(JComponent... list)
 		{
 		JComponent last=list[list.length-1];

@@ -1,5 +1,6 @@
 package cellstore.viewer.browser;
 
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -68,14 +69,14 @@ public class BrowserPaneProjections extends JPanel implements ActionListener
 		table.setFillsViewportHeight(true);
 		
 		
+		JPanel pButtons=new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		pButtons.add(bDelete);
 		
 		setLayout(new GridLayout(1, 1));
 		add(EvSwingUtil.layoutACB(
 				null, 
 				scrollPane, 
-				EvSwingUtil.layoutCompactHorizontal(
-						bDelete
-						)));
+				pButtons));
 
 		//On double-click, open projection
 		table.addMouseListener(new MouseAdapter() 
