@@ -7,11 +7,11 @@ package cellstore.viewer.event;
  * @author Johan Henriksson
  *
  */
-public class EventViewerSelectedGene implements CellStoreEvent
+public class ViewerEventSelectedGene implements CellStoreEvent
 	{
 	public String geneID;
 	
-	public EventViewerSelectedGene(String geneID)
+	public ViewerEventSelectedGene(String geneID)
 		{
 		this.geneID=geneID;
 		}

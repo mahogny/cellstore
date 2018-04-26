@@ -12,6 +12,7 @@ import cellstore.db.CellStoreDB;
 import cellstore.db.CellStoreDatasets;
 import cellstore.db.CellStoreUser;
 import cellstore.viewer.event.CellStoreEventListener;
+import cellstore.viewer.event.CellStoreEventProjectionsUpdated;
 import cellstore.viewer.event.CellStoreEvent;
 
 /**
@@ -25,18 +26,26 @@ public class CellStoreConnectionLocal implements CellStoreConnection
 	private CellStoreDB db;
 	private WeakHashMap<CellStoreEventListener, Object> mapListeners=new WeakHashMap<>();
 
+	/**
+	 * Create a local connection
+	 */
 	public CellStoreConnectionLocal(CellStoreDB db2)
 		{
 		db=db2;
 		}
 
+	/**
+	 * Send an event to all listeners
+	 */
 	public void emitEvent(CellStoreEvent e)
 		{
 		for(CellStoreEventListener list:mapListeners.keySet())
 			list.cellStoreEvent(e);
 		}
 	
-	
+	/**
+	 * Add an event listener
+	 */
 	public void addListener(CellStoreEventListener e)
 		{
 		mapListeners.put(e, null);
@@ -48,7 +57,7 @@ public class CellStoreConnectionLocal implements CellStoreConnection
 		return db.datasets.projections.get(i);
 		}
 
-	public Map<Integer, CellProjection> getDimReds()
+	public Map<Integer, CellProjection> getProjections()
 		{
 		return db.datasets.projections;
 		}
@@ -111,12 +120,16 @@ public class CellStoreConnectionLocal implements CellStoreConnection
 	
 	public Integer putUser(CellStoreUser user) throws IOException
 		{
-		return db.putNewUser(user);
+		Integer ret=db.putNewUser(user);
+		//emitEvent(new ...());
+		return ret;
 		}
 	
 	public boolean removeProjection(int id) throws IOException
 		{
-		return db.removeProjection(id);
+		boolean ret=db.removeProjection(id);
+		emitEvent(new CellStoreEventProjectionsUpdated());
+		return ret;
 		}
 
 	}

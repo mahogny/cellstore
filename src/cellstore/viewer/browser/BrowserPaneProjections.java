@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.Map;
 
 import javax.swing.JButton;
@@ -19,6 +20,7 @@ import cellstore.db.CellProjection;
 import cellstore.db.CellStoreUser;
 import cellstore.server.conn.CellStoreConnectionLocal;
 import cellstore.viewer.event.CellStoreEvent;
+import cellstore.viewer.event.CellStoreEventProjectionsUpdated;
 import cellstore.viewer.projection.ViewerProjection;
 import util.EvSwingUtil;
 
@@ -92,7 +94,7 @@ public class BrowserPaneProjections extends JPanel implements ActionListener
         "Owner"};
 		
 		Map<Integer, CellStoreUser> users=conn.getAllUsers();
-		Map<Integer,CellProjection> dimreds=conn.getDimReds();
+		Map<Integer,CellProjection> dimreds=conn.getProjections();
 		
 		int numDimRed=dimreds.size();
 		Object[][] data = new Object[numDimRed][];
@@ -120,13 +122,29 @@ public class BrowserPaneProjections extends JPanel implements ActionListener
 		{
 		if(e.getSource()==bDelete)
 			{
-			
+			int row=table.getSelectedRow();
+			if(row>=0)
+				{
+    		int id=(Integer)table.getModel().getValueAt(row, 0);
+  			try
+					{
+					conn.removeProjection(id);
+					}
+				catch (IOException e1)
+					{
+					e1.printStackTrace();
+					}
+				}
 			}
 		}
 
 
 	public void cellStoreEvent(CellStoreEvent e)
 		{
+		if(e instanceof CellStoreEventProjectionsUpdated)
+			{
+			updateTable();
+			}
 		}
 	
 

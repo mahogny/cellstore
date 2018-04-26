@@ -13,15 +13,17 @@ import java.io.IOException;
 import javax.swing.ButtonGroup;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import cellstore.db.GeneNameMapping;
 import cellstore.server.conn.CellStoreConnection;
+import cellstore.viewer.MenuFavouriteGenes;
 import cellstore.viewer.event.CellStoreEvent;
 import cellstore.viewer.event.CellStoreEventListener;
-import cellstore.viewer.event.EventViewerSelectedGene;
+import cellstore.viewer.event.ViewerEventSelectedGene;
 import util.EvSwingUtil;
 
 /**
@@ -53,7 +55,11 @@ public class ViewerProjection extends JFrame implements ActionListener, KeyListe
 		{
 		this.conn=conn;
 		conn.addListener(this);
-		
+
+		JMenuBar menubar=new JMenuBar();
+		menubar.add(new MenuFavouriteGenes());
+		setJMenuBar(menubar);
+
 		view=new PlotProjection(conn);
 		
 		setLayout(new BorderLayout());
@@ -252,9 +258,9 @@ public class ViewerProjection extends JFrame implements ActionListener, KeyListe
 	@Override
 	public void cellStoreEvent(CellStoreEvent e)
 		{
-		if(e instanceof EventViewerSelectedGene)
+		if(e instanceof ViewerEventSelectedGene)
 			{
-			tfGene.setText(((EventViewerSelectedGene) e).geneID);
+			tfGene.setText(((ViewerEventSelectedGene) e).geneID);
 			setColorByGene();
 			}
 		}

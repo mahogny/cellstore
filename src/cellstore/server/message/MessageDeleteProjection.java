@@ -10,7 +10,7 @@ import cellstore.server.response.ResponsePassFail;
 
 /**
  * 
- * Message to server: Get one DimRed
+ * Message to server: Delete a projection
  * 
  * @author Johan Henriksson
  *

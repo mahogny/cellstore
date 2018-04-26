@@ -17,7 +17,7 @@ import cellstore.db.GeneNameMapping;
 import cellstore.server.conn.CellStoreConnection;
 import cellstore.viewer.event.CellStoreEvent;
 import cellstore.viewer.event.CellStoreEventListener;
-import cellstore.viewer.event.EventViewerSelectedGene;
+import cellstore.viewer.event.ViewerEventSelectedGene;
 import util.EvBrowserUtil;
 import util.EvSwingUtil;
 
@@ -116,7 +116,7 @@ public class PaneDE extends JPanel implements ActionListener, CellStoreEventList
 	    		plotVolc.setSelectedGene(geneID);
 	    		
 	    		
-	    		conn.emitEvent(new EventViewerSelectedGene(geneID));
+	    		conn.emitEvent(new ViewerEventSelectedGene(geneID));
 		    	}
 	    	}
 			});

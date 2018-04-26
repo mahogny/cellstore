@@ -13,6 +13,7 @@ import javax.swing.JTabbedPane;
 
 import cellstore.server.conn.CellStoreConnectionLocal;
 import cellstore.viewer.DialogConnect;
+import cellstore.viewer.MenuFavouriteGenes;
 import cellstore.viewer.event.CellStoreEvent;
 import cellstore.viewer.event.CellStoreEventListener;
 
