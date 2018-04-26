@@ -13,6 +13,7 @@ import cellstore.db.CellProjection;
 import cellstore.db.CellSetFile;
 import cellstore.server.message.Message;
 import cellstore.server.message.MessageAuthenticate;
+import cellstore.server.message.MessageDeleteProjection;
 import cellstore.server.message.MessageGetClusterings;
 import cellstore.server.message.MessageGetUsers;
 import cellstore.server.message.MessagePutProjection;
@@ -23,6 +24,8 @@ import cellstore.server.response.ResponseAuthChallenge;
 import cellstore.server.response.ResponseListClusterings;
 import cellstore.server.response.ResponseListProjections;
 import cellstore.server.response.ResponsePassFail;
+import cellstore.viewer.event.CellStoreEvent;
+import cellstore.viewer.event.CellStoreEventListener;
 
 /**
  * Connection to a database
@@ -161,6 +164,28 @@ public class CellStoreConnectionServer implements CellStoreConnection
 		{
 		s.close();
 		}
+
+	@Override
+	public void addListener(CellStoreEventListener e)
+		{
+		// TODO Auto-generated method stub
+		
+		}
+
+	@Override
+	public void emitEvent(CellStoreEvent e)
+		{
+		// TODO Auto-generated method stub
+		
+		}
 	
 	
+	public boolean removeProjection(int id) throws IOException
+		{
+		MessageDeleteProjection m=new MessageDeleteProjection();
+		m.id=id;
+		ResponsePassFail resp=(ResponsePassFail)sendReceive(m);
+		return resp.passed;
+		}
+
 	}

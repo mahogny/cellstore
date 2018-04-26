@@ -116,7 +116,7 @@ public class CellStoreDB
 		}
 
 	/**
-	 * Store a cell projection
+	 * Store a new cell projection
 	 * 
 	 * @param projection
 	 * @return
@@ -126,6 +126,34 @@ public class CellStoreDB
 		int newid=getFreeID(datasets.projections.keySet());
 		datasets.projections.put(newid, projection);
 		return newid;
+		}
+
+	/**
+	 * Store a new user
+	 * 
+	 * @param u
+	 * @return
+	 * @throws IOException 
+	 */
+	public Integer putNewUser(CellStoreUser u) throws IOException
+		{
+		int newid=getFreeID(datasets.projections.keySet());
+		user.put(newid, u);
+		writeUsers();
+		return newid;
+		}
+
+	/**
+	 * Remove a projection
+	 * 
+	 * @param id
+	 * @return 
+	 */
+	public boolean removeProjection(int id) throws IOException
+		{
+		datasets.projections.remove(id);
+		// TODO also remove from disk
+		return true;
 		}
 	
 

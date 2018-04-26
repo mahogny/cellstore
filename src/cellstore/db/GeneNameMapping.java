@@ -95,6 +95,8 @@ public class GeneNameMapping
 		{
 		LinkedList<String> list=mapSymId.get(genesym);
 		//System.out.println("got ids "+list);
+		if(mapIdSym.containsKey(genesym))
+			return genesym;
 		if(list==null || list.isEmpty())
 			return "";
 		else

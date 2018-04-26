@@ -9,6 +9,7 @@ import javax.swing.JTable;
 import cellstore.db.CellSetFile;
 import cellstore.db.CellStoreUser;
 import cellstore.server.conn.CellStoreConnectionLocal;
+import cellstore.viewer.event.CellStoreEvent;
 
 /**
  * A view of all the cellsets in the database
@@ -71,6 +72,10 @@ public class BrowserPaneCounts extends JPanel
 	    	}
 			});
 		*/
+		}
+
+	public void cellStoreEvent(CellStoreEvent e)
+		{
 		}
 	
 

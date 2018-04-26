@@ -59,7 +59,7 @@ cellstore.upload.projection <- function(conn, X, name){
 }
 
 
-m <- matrix(c(1,2,3,4),nrow=2)
+m <- matrix(c(1,2,3,4,5,6),nrow=2)
 as.vector(m)
 
 cc <- cellstore.connect()
@@ -72,4 +72,7 @@ cellstore.upload.projection(cc, m, "mycount")
 #ret <- .jcall("cellstore.r.RCellStore", "cellstore.r.RCellStore", "connect", address, port, user, password)
 #ret <- .jcall("cellstore.r.Test", "[D", "test")
 #  z=.jcall("cellstore.r.RCellStore", "[D", "convolve", x,y)
+
+
+
 

@@ -5,6 +5,8 @@ import java.awt.GridLayout;
 import javax.swing.JFrame;
 
 import cellstore.server.conn.CellStoreConnection;
+import cellstore.viewer.event.CellStoreEvent;
+import cellstore.viewer.event.CellStoreEventListener;
 
 /**
  * 
@@ -12,7 +14,7 @@ import cellstore.server.conn.CellStoreConnection;
  * @author Johan Henriksson
  *
  */
-public class ViewerClusterDE extends JFrame
+public class ViewerClusterDE extends JFrame implements CellStoreEventListener
 	{
 	private static final long serialVersionUID = 1L;
 
@@ -22,6 +24,7 @@ public class ViewerClusterDE extends JFrame
 	public ViewerClusterDE(CellStoreConnection conn)
 		{
 		this.conn=conn;
+		conn.addListener(this);
 		
 		paneDE=new PaneDE(conn);
 		setLayout(new GridLayout(1,1));
@@ -30,6 +33,11 @@ public class ViewerClusterDE extends JFrame
 		setSize(400,500);
 		setVisible(true);
 		setTitle("Cluster marker genes");
+		}
+
+	@Override
+	public void cellStoreEvent(CellStoreEvent e)
+		{
 		}
 	
 	

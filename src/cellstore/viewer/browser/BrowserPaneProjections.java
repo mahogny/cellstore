@@ -18,6 +18,7 @@ import javax.swing.table.DefaultTableModel;
 import cellstore.db.CellProjection;
 import cellstore.db.CellStoreUser;
 import cellstore.server.conn.CellStoreConnectionLocal;
+import cellstore.viewer.event.CellStoreEvent;
 import cellstore.viewer.projection.ViewerProjection;
 import util.EvSwingUtil;
 
@@ -121,6 +122,11 @@ public class BrowserPaneProjections extends JPanel implements ActionListener
 			{
 			
 			}
+		}
+
+
+	public void cellStoreEvent(CellStoreEvent e)
+		{
 		}
 	
 

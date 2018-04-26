@@ -13,6 +13,8 @@ import javax.swing.JTabbedPane;
 
 import cellstore.server.conn.CellStoreConnectionLocal;
 import cellstore.viewer.DialogConnect;
+import cellstore.viewer.event.CellStoreEvent;
+import cellstore.viewer.event.CellStoreEventListener;
 
 /**
  * 
@@ -21,7 +23,7 @@ import cellstore.viewer.DialogConnect;
  * @author Johan Henriksson
  *
  */
-public class DataBrowser extends JFrame implements ActionListener
+public class DataBrowser extends JFrame implements ActionListener, CellStoreEventListener
 	{
 	private static final long serialVersionUID = 1L;
 	
@@ -35,6 +37,9 @@ public class DataBrowser extends JFrame implements ActionListener
 	
 	
 	private BrowserPaneProjections vdr;
+	BrowserPaneCounts vcs;
+	BrowserPaneUsers vu;
+	BrowserPaneClusterings vc;
 	
 	/**
 	 * Constructor of the browser
@@ -43,16 +48,18 @@ public class DataBrowser extends JFrame implements ActionListener
 	 */
 	public DataBrowser(CellStoreConnectionLocal conn)
 		{
+		conn.addListener(this);
+		
 		menubar.add(mServer);
 		mServer.add(miConnect);
 		mServer.add(miRefresh);
 		mServer.add(miQuit);
 		setJMenuBar(menubar);
 		
-		BrowserPaneUsers vu=new BrowserPaneUsers(conn);
-		BrowserPaneCounts vcs=new BrowserPaneCounts(conn);
+		vu=new BrowserPaneUsers(conn);
+		vcs=new BrowserPaneCounts(conn);
 		vdr=new BrowserPaneProjections(conn);
-		BrowserPaneClusterings vc=new BrowserPaneClusterings(conn);
+		vc=new BrowserPaneClusterings(conn);
 		
 		tabbedPane.add("Projections", vdr);
 		tabbedPane.add("Clusterings", vc);
@@ -96,6 +103,17 @@ public class DataBrowser extends JFrame implements ActionListener
 			{
 			System.exit(0);
 			}
+		}
+
+
+
+	@Override
+	public void cellStoreEvent(CellStoreEvent e)
+		{
+		vu.cellStoreEvent(e);
+		vcs.cellStoreEvent(e);
+		vdr.cellStoreEvent(e);
+		vc.cellStoreEvent(e);
 		}
 
 	}

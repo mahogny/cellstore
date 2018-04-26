@@ -12,6 +12,7 @@ import javax.swing.JTable;
 import cellstore.db.CellClustering;
 import cellstore.db.CellStoreUser;
 import cellstore.server.conn.CellStoreConnectionLocal;
+import cellstore.viewer.event.CellStoreEvent;
 import util.EvSwingUtil;
 
 /**
@@ -91,6 +92,10 @@ public class BrowserPaneClusterings extends JPanel
 	    	}
 			});
 		*/
+		}
+
+	public void cellStoreEvent(CellStoreEvent e)
+		{
 		}
 	
 

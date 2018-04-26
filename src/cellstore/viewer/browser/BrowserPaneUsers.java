@@ -11,6 +11,7 @@ import javax.swing.JTable;
 
 import cellstore.db.CellStoreUser;
 import cellstore.server.conn.CellStoreConnectionLocal;
+import cellstore.viewer.event.CellStoreEvent;
 import util.EvSwingUtil;
 
 /**
@@ -71,6 +72,10 @@ public class BrowserPaneUsers extends JPanel
 				pButtons));
 		
 		//table.getTableHeader().setVisible(true);
+		}
+
+	public void cellStoreEvent(CellStoreEvent e)
+		{
 		}
 	
 

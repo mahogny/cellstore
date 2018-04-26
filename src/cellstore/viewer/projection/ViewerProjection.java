@@ -17,9 +17,11 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-import cellstore.db.CellClustering;
 import cellstore.db.GeneNameMapping;
 import cellstore.server.conn.CellStoreConnection;
+import cellstore.viewer.event.CellStoreEvent;
+import cellstore.viewer.event.CellStoreEventListener;
+import cellstore.viewer.event.EventViewerSelectedGene;
 import util.EvSwingUtil;
 
 /**
@@ -28,11 +30,11 @@ import util.EvSwingUtil;
  * @author Johan Henriksson
  *
  */
-public class ViewerProjection extends JFrame implements ActionListener, KeyListener
+public class ViewerProjection extends JFrame implements ActionListener, KeyListener, CellStoreEventListener
 	{
 	private static final long serialVersionUID = 1L;
 
-	private JComboBox<ColorBy> comboColorMeta=new JComboBox<ColorBy>();
+	private JComboBox<ProjectionColorBy> comboColorMeta=new JComboBox<ProjectionColorBy>();
 	private JRadioButton rbColorMeta=new JRadioButton();
 	private JRadioButton rbColorGene=new JRadioButton("Gene: ");
 	private PlotProjection view;
@@ -45,27 +47,13 @@ public class ViewerProjection extends JFrame implements ActionListener, KeyListe
 	
 	
 	/**
-	 * One option as for what you can color by. For now only clusterings
-	 */
-	public static class ColorBy
-		{
-		public CellClustering clustering;
-		public int clusterID;
-					
-		@Override
-		public String toString()
-			{
-			return clustering.name;
-			}
-		}
-
-
-	/**
 	 * Constructor
 	 */
 	public ViewerProjection(CellStoreConnection conn)
 		{
 		this.conn=conn;
+		conn.addListener(this);
+		
 		view=new PlotProjection(conn);
 		
 		setLayout(new BorderLayout());
@@ -141,7 +129,7 @@ public class ViewerProjection extends JFrame implements ActionListener, KeyListe
 				{
 				for(int clId:conn.getListClusterings())
 					{
-					ColorBy cb=new ColorBy();
+					ProjectionColorBy cb=new ProjectionColorBy();
 					cb.clusterID=clId;
 					cb.clustering=conn.getClustering(clId);
 					comboColorMeta.addItem(cb);
@@ -165,7 +153,7 @@ public class ViewerProjection extends JFrame implements ActionListener, KeyListe
 		view.colorByGene=null;
 
 		//Color by clustering?
-		ColorBy cb=(ColorBy)comboColorMeta.getSelectedItem();
+		ProjectionColorBy cb=(ProjectionColorBy)comboColorMeta.getSelectedItem();
 		if(cb!=null && rbColorMeta.isSelected())
 			view.colorByClustering=cb.clustering;
 		
@@ -213,8 +201,6 @@ public class ViewerProjection extends JFrame implements ActionListener, KeyListe
 		tfGene.setBackground(Color.yellow);
 		if(arg0.getKeyChar()=='\n')
 			{
-			tfGene.setBackground(Color.white);
-			
 			String id=gm.getIDfor(tfGene.getText());
 			if(id==null)
 				{
@@ -227,10 +213,18 @@ public class ViewerProjection extends JFrame implements ActionListener, KeyListe
 				view.colorByGene=id;
 				*/
 				}
-			rbColorGene.setSelected(true);
-			updateViewInfo();
-			view.scaleGeneExp();
+			setColorByGene();
 			}
+		}
+	
+	private void setColorByGene()
+		{
+		//System.out.println("text "+tfGene.getText());
+		//System.out.println("gene is id -"+gm.getIDfor(tfGene.getText())+"-");
+		tfGene.setBackground(Color.white);
+		rbColorGene.setSelected(true);
+		updateViewInfo();
+		view.scaleGeneExp();
 		}
 
 
@@ -251,6 +245,17 @@ public class ViewerProjection extends JFrame implements ActionListener, KeyListe
 		catch (IOException e)
 			{
 			e.printStackTrace();
+			}
+		}
+
+
+	@Override
+	public void cellStoreEvent(CellStoreEvent e)
+		{
+		if(e instanceof EventViewerSelectedGene)
+			{
+			tfGene.setText(((EventViewerSelectedGene) e).geneID);
+			setColorByGene();
 			}
 		}
 	

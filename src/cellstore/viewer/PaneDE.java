@@ -15,6 +15,9 @@ import javax.swing.JTable;
 import cellstore.db.DiffExp;
 import cellstore.db.GeneNameMapping;
 import cellstore.server.conn.CellStoreConnection;
+import cellstore.viewer.event.CellStoreEvent;
+import cellstore.viewer.event.CellStoreEventListener;
+import cellstore.viewer.event.EventViewerSelectedGene;
 import util.EvBrowserUtil;
 import util.EvSwingUtil;
 
@@ -24,9 +27,11 @@ import util.EvSwingUtil;
  * @author Johan Henriksson
  *
  */
-public class PaneDE extends JPanel implements ActionListener
+public class PaneDE extends JPanel implements ActionListener, CellStoreEventListener
 	{
 	private static final long serialVersionUID = 1L;
+
+	public CellStoreConnection conn;
 
 	public DiffExp de=new DiffExp();
 	public PlotVolcano plotVolc;
@@ -38,6 +43,7 @@ public class PaneDE extends JPanel implements ActionListener
 
 
 	JTable table;
+
 	
 	/**
 	 * Constructor
@@ -46,6 +52,9 @@ public class PaneDE extends JPanel implements ActionListener
 	 */
 	public PaneDE(CellStoreConnection conn)
 		{
+		conn.addListener(this);
+		this.conn=conn;
+		
 		plotVolc=new PlotVolcano(conn);
 		
 		String[] columnNames = {
@@ -105,6 +114,9 @@ public class PaneDE extends JPanel implements ActionListener
 	    		System.out.println("row "+row);
 	    		String geneID=(String)table.getModel().getValueAt(row, 0);
 	    		plotVolc.setSelectedGene(geneID);
+	    		
+	    		
+	    		conn.emitEvent(new EventViewerSelectedGene(geneID));
 		    	}
 	    	}
 			});
@@ -149,6 +161,14 @@ public class PaneDE extends JPanel implements ActionListener
 					EvBrowserUtil.displayURL("http://www.ensembl.org/Mus_musculus/Gene/Summary?g="+geneID);
 				}
 			}
+		}
+
+
+
+	@Override
+	public void cellStoreEvent(CellStoreEvent e)
+		{
+		//TODO select gene in list
 		}
 
 

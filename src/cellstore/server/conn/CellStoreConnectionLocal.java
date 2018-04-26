@@ -3,6 +3,7 @@ package cellstore.server.conn;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import cellstore.db.CellClustering;
 import cellstore.db.CellProjection;
@@ -10,6 +11,8 @@ import cellstore.db.CellSetFile;
 import cellstore.db.CellStoreDB;
 import cellstore.db.CellStoreDatasets;
 import cellstore.db.CellStoreUser;
+import cellstore.viewer.event.CellStoreEventListener;
+import cellstore.viewer.event.CellStoreEvent;
 
 /**
  * Connection to a database
@@ -20,13 +23,25 @@ import cellstore.db.CellStoreUser;
 public class CellStoreConnectionLocal implements CellStoreConnection
 	{
 	private CellStoreDB db;
+	private WeakHashMap<CellStoreEventListener, Object> mapListeners=new WeakHashMap<>();
 
 	public CellStoreConnectionLocal(CellStoreDB db2)
 		{
 		db=db2;
 		}
-	
 
+	public void emitEvent(CellStoreEvent e)
+		{
+		for(CellStoreEventListener list:mapListeners.keySet())
+			list.cellStoreEvent(e);
+		}
+	
+	
+	public void addListener(CellStoreEventListener e)
+		{
+		mapListeners.put(e, null);
+		}
+	
 	@Override
 	public CellProjection getProjection(int i)
 		{
@@ -93,4 +108,15 @@ public class CellStoreConnectionLocal implements CellStoreConnection
 		{
 		throw new IOException("not implemented");
 		}
+	
+	public Integer putUser(CellStoreUser user) throws IOException
+		{
+		return db.putNewUser(user);
+		}
+	
+	public boolean removeProjection(int id) throws IOException
+		{
+		return db.removeProjection(id);
+		}
+
 	}
