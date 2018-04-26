@@ -15,12 +15,12 @@ import cellstore.viewer.browser.DataBrowser;
  */
 public class MainView
 	{
-
-	
 	public static void main(String[] args) throws IOException
 		{
+		
 		System.out.println("Reading data");
 		CellStoreMain main=new CellStoreMain();
+		
 		
 		CellStoreConnectionLocal conn=new CellStoreConnectionLocal(main.db);
 		
@@ -31,7 +31,6 @@ public class MainView
 		*/
 		System.out.println("Run viewer for users");
 		new DataBrowser(conn);
-
 		new ViewerClusterDE(conn);
 
 //		new CellStoreViewer(null);
