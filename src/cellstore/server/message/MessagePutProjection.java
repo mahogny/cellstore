@@ -6,7 +6,6 @@ import cellstore.db.CellProjection;
 import cellstore.server.CellStoreMain;
 import cellstore.server.ClientThread;
 import cellstore.server.response.Response;
-import cellstore.server.response.ResponseListProjections;
 import cellstore.server.response.ResponsePassFail;
 
 /**

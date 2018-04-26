@@ -13,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 import cellstore.db.CellProjection;
 import cellstore.db.CellStoreUser;
@@ -31,38 +32,17 @@ public class BrowserPaneProjections extends JPanel implements ActionListener
 	private static final long serialVersionUID = 1L;
 
 	private JButton bDelete=new JButton("Delete");
+	private JTable table = new JTable();
 
+	CellStoreConnectionLocal conn;
+	
 	public BrowserPaneProjections(final CellStoreConnectionLocal conn)
 		{
-		String[] columnNames = {
-				"id",
-				"Name",
-        "Owner"};
+		this.conn=conn;
 		
-		Map<Integer, CellStoreUser> users=conn.getAllUsers();
-		Map<Integer,CellProjection> dimreds=conn.getDimReds();
-		
-		
-		
-		int numDimRed=dimreds.size();
-		Object[][] data = new Object[numDimRed][];
-		int i=0;
-		for(CellProjection dimred:dimreds.values())
-			{
-			CellStoreUser u=users.get(dimred.ownerID);
-			
-			Object[] dat={
-					new Integer(dimred.id),
-					dimred.name,
-					u.username
-					};
-			data[i]=dat;
-			i++;
-			}
-					
-		JTable table = new JTable(data, columnNames);
 		table.setDefaultEditor(Object.class, null);
-
+		updateTable();
+		
 		bDelete.addActionListener(this);
 		
 		JScrollPane scrollPane = new JScrollPane(table);
@@ -99,6 +79,40 @@ public class BrowserPaneProjections extends JPanel implements ActionListener
 			});
 		}
 
+	
+	/**
+	 * 
+	 */
+	public void updateTable()
+		{
+		String[] columnNames = {
+				"id",
+				"Name",
+        "Owner"};
+		
+		Map<Integer, CellStoreUser> users=conn.getAllUsers();
+		Map<Integer,CellProjection> dimreds=conn.getDimReds();
+		
+		int numDimRed=dimreds.size();
+		Object[][] data = new Object[numDimRed][];
+		int i=0;
+		for(CellProjection dimred:dimreds.values())
+			{
+			CellStoreUser u=users.get(dimred.ownerID);
+			
+			Object[] dat={
+					new Integer(dimred.id),
+					dimred.name,
+					u.username
+					};
+			data[i]=dat;
+			i++;
+			}
+		
+		DefaultTableModel m=new DefaultTableModel(data, columnNames);
+		table.setModel(m);
+
+		}
 	
 	@Override
 	public void actionPerformed(ActionEvent e)
