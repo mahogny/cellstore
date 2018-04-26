@@ -40,9 +40,6 @@ TODO list
 
 * tab: cellsets - add delete button
 
-*  tab: clusterings
-**	delete button
-
 * tab: dimension reductions
 ** delete button
 ** double click on dimred to open cluster viewer (needs major cleanup)
