@@ -24,6 +24,7 @@ public class BrowserPaneUsers extends JPanel
 	private static final long serialVersionUID = 1L;
 
 	private JButton bDelete=new JButton("Delete");
+	private JButton bAdd = new JButton("Add user");
 	
 	public BrowserPaneUsers(CellStoreConnectionLocal conn)
 		{
@@ -60,6 +61,7 @@ public class BrowserPaneUsers extends JPanel
 		add(scrollPane);
 		
 		JPanel pButtons=new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		pButtons.add(bAdd);
 		pButtons.add(bDelete);
 		
 		setLayout(new GridLayout(1, 1));
