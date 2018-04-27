@@ -8,7 +8,6 @@ import cellstore.db.CellClustering;
 public class ProjectionColorBy
 	{
 	public CellClustering clustering;
-	public int clusterID;
 				
 	@Override
 	public String toString()

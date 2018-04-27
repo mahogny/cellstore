@@ -136,7 +136,6 @@ public class ViewerProjection extends JFrame implements ActionListener, KeyListe
 				for(int clId:conn.getListClusterings())
 					{
 					ProjectionColorBy cb=new ProjectionColorBy();
-					cb.clusterID=clId;
 					cb.clustering=conn.getClustering(clId);
 					comboColorMeta.addItem(cb);
 					}
@@ -243,7 +242,7 @@ public class ViewerProjection extends JFrame implements ActionListener, KeyListe
 		{
 		try
 			{
-			view.dimred=conn.getProjection(id);
+			view.projection=conn.getProjection(id);
 			fillComboColorBy();
 			view.adjustScale();
 			updateViewInfo();

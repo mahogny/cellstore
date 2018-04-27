@@ -90,7 +90,7 @@ public class CellStoreConnectionLocal implements CellStoreConnection
 		{
 		CellSetFile csf=db.datasets.cellsets.get(id);
 		if(csf==null)
-			System.out.println("Tried to get csf "+id);
+			System.out.println("Tried but failed to get csf "+id);
 		return csf;
 		}
 

@@ -1,6 +1,6 @@
 package cellstore.db;
 
 public interface CellSetDataRetriever
-{
-public double getExp(int cellIndex, int geneIndex);
-}
+	{
+	public double getExp(int cellIndex, int geneIndex);
+	}

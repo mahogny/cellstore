@@ -50,11 +50,25 @@ cellstore.upload.connectivity <- function(conn, X, name){
   
 }
 
+cellstore.wrap.matrix.int <- function(m){
+  .jnew("cellstore/r/RMatrixI",as.integer(as.vector(m)), dim(m))
+}
+cellstore.wrap.matrix.double <- function(m){
+  .jnew("cellstore/r/RMatrixD",as.double(as.vector(m)), dim(m))
+}
 
 #####################################################################
 ## Upload a projection
-cellstore.upload.projection <- function(conn, X, name){
-  ret <- .jcall(conn, "Z", "uploadProjection", as.vector(X), dim(X), name)
+cellstore.upload.projection <- function(conn, cell_pos, name, relatedto){
+  cell_id <- cbind(
+    rep(relatedto, nrow(cell_pos)),
+    1:nrow(cell_pos)) #should technically use obs$index
+  
+  
+  ret <- .jcall(conn, "Z", "uploadProjection", 
+                cellstore.wrap.matrix.int(cell_id),
+                cellstore.wrap.matrix.double(cell_pos),
+                name, relatedto)
   
 }
 
@@ -65,6 +79,12 @@ as.vector(m)
 cc <- cellstore.connect()
 cellstore.upload.count(cc, X, "mycount")
 cellstore.upload.projection(cc, m, "mycount")
+
+
+cellstore.upload.projection(cc, m, "tsne", "2")   
+
+
+cellstore.upload.connectivity(cc, m, "jpdist", "")
 
 
 #cc

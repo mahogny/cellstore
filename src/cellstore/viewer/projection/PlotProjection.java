@@ -57,7 +57,7 @@ public class PlotProjection extends JPanel implements MouseMotionListener, Mouse
 	 */
 	
 
-	public CellProjection dimred;
+	public CellProjection projection;
 	private CellStoreConnection conn;
 
 	/**
@@ -85,15 +85,15 @@ public class PlotProjection extends JPanel implements MouseMotionListener, Mouse
 		double minY=Double.MAX_VALUE;
 		double maxY=-Double.MAX_VALUE;
 		
-		if(dimred!=null)
+		if(projection!=null)
 			{
-			for(int i=0;i<dimred.getNumCell();i++)
+			for(int i=0;i<projection.getNumCell();i++)
 				{
-				minX=Math.min(minX,dimred.x[i]);
-				minY=Math.min(minY,dimred.y[i]);
+				minX=Math.min(minX,projection.x[i]);
+				minY=Math.min(minY,projection.y[i]);
 				
-				maxX=Math.max(maxX,dimred.x[i]);
-				maxY=Math.max(maxY,dimred.y[i]);
+				maxX=Math.max(maxX,projection.x[i]);
+				maxY=Math.max(maxY,projection.y[i]);
 				}
 			}
 		
@@ -144,13 +144,14 @@ public class PlotProjection extends JPanel implements MouseMotionListener, Mouse
 	public void scaleGeneExp()
 		{
 		double maxlevel=0.0001;
-		if(dimred!=null && colorByGene!=null && dimred.getNumCell()>1)
+		if(projection!=null && colorByGene!=null && projection.getNumCell()>1)
 			{
-			for(int i=0;i<dimred.getNumCell();i++)
+			for(int i=0;i<projection.getNumCell();i++)
 				{
-				CellSet cellset=conn.getCellSetFile(dimred.cellsetIndex[i]).getCellSet(); //TODO Should not be repeated
+				//System.out.println("cell#: "+i);
+				CellSet cellset=conn.getCellSetFile(projection.indexCellSet[i]).getCellSet(); //TODO Should not be repeated
 //				CellSet cellset=dimred.cellsets.get(dimred.cellsetIndex[i]);
-				double level=cellset.getExp(dimred.cellsetCell[i], colorByGene);
+				double level=cellset.getExp(projection.indexCell[i], colorByGene);
 				maxlevel=Math.max(maxlevel,level);
 				}
 			}
@@ -169,11 +170,11 @@ public class PlotProjection extends JPanel implements MouseMotionListener, Mouse
 		g.fillRect(0, 0, getWidth(), getHeight());
 		
 		//Only draw anything if a projection has been chosen
-		if(dimred!=null)
+		if(projection!=null)
 			{
 			CellSetFile csf=null;
 			
-			for(int i=0;i<dimred.getNumCell();i++)
+			for(int i=0;i<projection.getNumCell();i++)
 				{
 				if(colorByGene!=null)
 					{
@@ -181,13 +182,13 @@ public class PlotProjection extends JPanel implements MouseMotionListener, Mouse
 					//System.out.println("colorbygene "+colorByGene);
 					
 					//Get the data file - cache it as usually only one file ever used
-					if(csf==null || csf.id!=dimred.cellsetIndex[i])
-						csf=conn.getCellSetFile(dimred.cellsetIndex[i]);					
+					if(csf==null || csf.id!=projection.indexCellSet[i])
+						csf=conn.getCellSetFile(projection.indexCellSet[i]);					
 					CellSet cellset=csf.getCellSet(); //TODO Should not be repeated
 
 					
 					//Map intensity to color
-					double level=cellset.getExp(dimred.cellsetCell[i], colorByGene);
+					double level=cellset.getExp(projection.indexCell[i], colorByGene);
 					level=Math.log10(1+level);
 					float rgb=(float)(level*scalingGeneExp);
 					if(rgb>1)
@@ -197,22 +198,27 @@ public class PlotProjection extends JPanel implements MouseMotionListener, Mouse
 				else if(colorByClustering!=null)
 					{
 					//Set the color based on clustering
-					Color c=colorByClustering.getColorFor(dimred.cellsetIndex[i], dimred.cellsetCell[i]);
+					Color c=colorByClustering.getColorFor(projection.indexCellSet[i], projection.indexCell[i]);
 					//System.out.println("got color "+c);
 					if(c!=null)
 						g.setColor(c);
 					else
-						g.setColor(Color.BLACK);
+						{
+						//System.out.println("Not part of clustering, cell# "+projection.cellsetIndex[i]+":"+projection.cellsetCell[i]);
+						g.setColor(Color.RED);
+						}
 					}
 				else
 					g.setColor(Color.BLACK);
 
 
+				
 				//Draw point on screen
-				int x=toScreenX(dimred.x[i]);
-				int y=toScreenY(dimred.y[i]);
-				int r=5;
-				g.fillOval(x-r, y-r, r*2, r*2);
+				int x=toScreenX(projection.x[i]);
+				int y=toScreenY(projection.y[i]);
+				//int r=5;
+				//g.fillOval(x-r, y-r, r*2, r*2);
+				g.drawLine(x, y, x, y);
 				}
 			
 			if(colorByGene!=null)

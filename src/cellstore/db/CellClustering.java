@@ -14,6 +14,7 @@ import java.util.Vector;
 
 import cellstore.hdf.object.Dataset;
 import cellstore.hdf.object.h5.H5File;
+import cellstore.r.RMatrixI;
 
 /**
  * Clustering of cells; might involve more than one CellSet. Can involve a subset of a cellset
@@ -63,6 +64,13 @@ public class CellClustering implements Serializable
 		}
 
 	
+	public void allocate(int len)
+		{
+		indexCellSet=new int[len];
+		indexCell=new int[len];
+		clusterID=new int[len];
+		}
+
 	/**
 	 * Allocate random colors
 	 */
@@ -115,60 +123,33 @@ public class CellClustering implements Serializable
 	
 	
 	
+	private transient HashMap<CellRef, Color> lookupColor;
+	
+	
 	/**
-	 * Key for lookup table
+	 * Generate quick lookup table
 	 */
-	private static class SetCell
-		{
-		private int set;
-		private int cell;
-		
-		public int hashCode()
-			{
-			return set+cell;
-			}
-		
-		public boolean equals(Object obj)
-			{
-			if(obj instanceof SetCell)
-				{
-				SetCell b=(SetCell)obj;
-				return set==b.set && cell==b.cell;
-				}
-			else
-				return false;
-			}
-
-		public SetCell(int set, int cell)
-			{
-			this.set = set;
-			this.cell = cell;
-			}
-		
-		@Override
-		public String toString()
-			{
-			return "("+set+","+cell+")";
-			}
-		}
-
-	
-	private transient HashMap<SetCell, Color> lookupColor;
-	
 	private void genLookup()
 		{
 		if(lookupColor==null)
 			{
 			lookupColor=new HashMap<>();
 			for(int i=0;i<getNumCell();i++)
-				lookupColor.put(new SetCell(indexCellSet[i], indexCell[i]), clusterColor[clusterID[i]]);
+				lookupColor.put(new CellRef(indexCellSet[i], indexCell[i]), clusterColor[clusterID[i]]);
+			//System.out.println(lookupColor.keySet());
 			}
 		}
 	
 	public Color getColorFor(int setID, int cell)
 		{
 		genLookup();
-		return lookupColor.get(new SetCell(setID, cell));
+		CellRef ref=new CellRef(setID, cell);
+		if(!lookupColor.containsKey(ref) && ref.set==2)
+			{
+			//System.out.println("Not part of hash "+ref);
+			//System.out.println(lookupColor.keySet());
+			}
+		return lookupColor.get(ref);
 		}
 
 	
@@ -201,9 +182,22 @@ public class CellClustering implements Serializable
 			
 			
 			
+			//Read cells referenced
+			Dataset obCellID=(Dataset)f.get("cell_id");
+			RMatrixI mIndex=new RMatrixI(obCellID);//(int[])obCellID.getData(), obCellID.getDims());
+			allocate(mIndex.nrow);
+			for(int i=0;i<mIndex.nrow;i++)
+				{
+				indexCellSet[i]=mIndex.get(i, 0);
+				indexCell[i]   =mIndex.get(i, 1);
+				clusterID[i]   =mIndex.get(i, 2);
+				}
+
+			/*
 			Dataset obCells=(Dataset)f.get("cells");
 			@SuppressWarnings("unchecked")
 			Vector<Object> v=(Vector<Object>)obCells.getData();
+			
 			
 			
 			String[] cellnames=(String[])v.get(0);
@@ -220,7 +214,7 @@ public class CellClustering implements Serializable
 				//System.out.println("name "+cellnames[i]+ "   "+cs.getIndexOfCell(cellnames[i]));
 				indexCellSet[i]=csf.id;
 				indexCell[i] =cs.getIndexOfCell(cellnames[i]);
-				}
+				}*/
 			
 			
 			}
@@ -231,7 +225,7 @@ public class CellClustering implements Serializable
 		catch (Exception e)
 			{
 			System.out.println(fileh);
-			System.out.println(e);
+			e.printStackTrace();
 			throw new IOException(e.getMessage());
 			}			
 		}
@@ -310,7 +304,9 @@ public class CellClustering implements Serializable
 		int r = Integer.parseInt(s.substring(1,3), 16);
 		int g = Integer.parseInt(s.substring(3,5), 16);
 		int b = Integer.parseInt(s.substring(5,7), 16);
-		return new Color(r, g, b);
+		Color c=new Color(r, g, b);
+		System.out.println(c);
+		return c;
 		}
 
 

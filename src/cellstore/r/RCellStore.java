@@ -90,30 +90,6 @@ public class RCellStore
 		return true;
 		}
 
-	/**
-	 * Easy access to an R matrix
-	 * 
-	 *[1,2;
-	 *[3,4]  becomes [1,2,3,4]
-	 */
-	public static class RMatrix
-		{
-		double[] matrix;
-		public int nrow, ncol;
-		
-		public RMatrix(double[] matrix, int[] matrixDim)
-			{
-			this.matrix=matrix;
-			nrow=matrixDim[0];
-			ncol=matrixDim[1];
-			}
-		
-		public double get(int row, int col)
-			{
-			return matrix[row*col+col];
-			}
-		}
-	
 	
 	/**
 	 * Upload a new projection
@@ -123,21 +99,25 @@ public class RCellStore
 	 * @param name
 	 * @return
 	 */
-	public boolean uploadProjection(double[] matrix, int[] matrixDim, String name)
+	public boolean uploadProjection(RMatrixD mCoordinates, RMatrixI mCellID,
+			String name)
 		{
-		RMatrix m=new RMatrix(matrix, matrixDim);
+//		RMatrixDouble mCoordinates=new RMatrixDouble(coordinates, dimCoordinates);
+	//	RMatrixInt mCellid=new RMatrixInt(cellid, dimCellid);
 		
+		int numcell=mCellID.nrow;
 		try
 			{
 			CellProjection p=new CellProjection();
 			p.name=name;
 
-			p.allocate(m.nrow);
-			
-			for(int i=0;i<m.nrow;i++)
+			p.allocate(numcell);
+			for(int i=0;i<numcell;i++)
 				{
-				p.x[i]=m.get(i,0);
-				p.y[i]=m.get(i,1);
+				p.indexCellSet[i]=mCellID.get(i, 0);
+				p.indexCell[i]=mCellID.get(i, 1);
+				p.x[i]=mCoordinates.get(i,0);
+				p.y[i]=mCoordinates.get(i,1);
 				}
 			
 			System.out.println("Uploading projection");

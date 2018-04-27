@@ -7,6 +7,12 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+import java.util.Vector;
+
+import cellstore.hdf.object.Dataset;
+import cellstore.hdf.object.h5.H5File;
+import cellstore.r.RMatrixD;
+import cellstore.r.RMatrixI;
 
 /**
  * Clustering of cells; might involve more than one CellSet. Can involve a subset of a cellset
@@ -24,8 +30,8 @@ public class CellProjection implements Serializable
 	public int ownerID;
 	public int id;
 
-	public int[] cellsetIndex;
-	public int[] cellsetCell;
+	public int[] indexCellSet;
+	public int[] indexCell;
 	public double[] x;
 	public double[] y;
 
@@ -39,8 +45,8 @@ public class CellProjection implements Serializable
 	
 	public void allocate(int len)
 		{
-		cellsetIndex=new int[len];
-		cellsetCell=new int[len];
+		indexCellSet=new int[len];
+		indexCell=new int[len];
 		x=new double[len];
 		y=new double[len];
 		}
@@ -54,8 +60,8 @@ public class CellProjection implements Serializable
 		
 		for(int i=0;i<len;i++)
 			{
-			cellsetIndex[i]=cellsetIndex2.get(i);
-			cellsetCell[i]=cellsetCell2.get(i);
+			indexCellSet[i]=cellsetIndex2.get(i);
+			indexCell[i]=cellsetCell2.get(i);
 			x[i]=x2.get(i);
 			y[i]=y2.get(i);
 			}
@@ -83,11 +89,58 @@ public class CellProjection implements Serializable
 		return x.length;
 		}
 
-	public void readFromHdf(File fileh, CellStoreDB db)
+	
+	/**
+	 * Read from HDF. Best stored as a compressed matrix, for random I/O
+	 * 
+	 * @throws IOException 
+	 */
+	public void readFromHdf(File fileh, CellStoreDB db) throws IOException
 		{
-		// TODO Auto-generated method stub
 		
+		try
+			{
+			H5File f=new H5File(fileh.getAbsolutePath());
+
+			//Read cells referenced
+			Dataset obCellID=(Dataset)f.get("cell_id");
+			RMatrixI mIndex=new RMatrixI(obCellID);//(int[])obCellID.getData(), obCellID.getDims());
+			allocate(mIndex.nrow);
+			for(int i=0;i<mIndex.nrow;i++)
+				{
+				indexCellSet[i]=mIndex.get(i, 0);
+				indexCell[i]   =mIndex.get(i, 1);
+				}
+			
+
+			//Read coordinates
+			Dataset obCoordinate=(Dataset)f.get("cell_pos");
+			RMatrixD mCoordinate=new RMatrixD(obCoordinate);
+			//RMatrixD mCoordinate=new RMatrixD((double[])obCoordinate.getData(), obCoordinate.getDims());
+			for(int i=0;i<mCoordinate.nrow;i++)
+				{
+				x[i]=mCoordinate.get(i, 0);
+				y[i]=mCoordinate.get(i, 1);
+				}
+			
+			//HDF *dims* is in format column x row
+			//might be doing it wrong
+
+			}
+		catch (OutOfMemoryError e)
+			{
+			throw new IOException(e.getMessage());
+			}
+		catch (Exception e)
+			{
+			System.out.println(fileh);
+			System.out.println(e);
+			e.printStackTrace();
+			throw new IOException(e.getMessage());
+			}			
 		}
+
+	
 
 	/**
 	 * 
@@ -162,4 +215,10 @@ public class CellProjection implements Serializable
 		bi.close();
 		return dimred;
 		}
+	
+	
+	
+	
+	
+	
 	}

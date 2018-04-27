@@ -2,9 +2,6 @@ package cellstore.viewer;
 
 import java.io.IOException;
 
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-
 import cellstore.server.CellStoreMain;
 import cellstore.server.conn.CellStoreConnectionLocal;
 import cellstore.viewer.browser.DataBrowser;
@@ -33,7 +30,7 @@ public class MainView
 		
 		System.out.println("Reading data");
 		CellStoreMain main=new CellStoreMain();
-		
+		main.openPort();
 		
 		CellStoreConnectionLocal conn=new CellStoreConnectionLocal(main.db);
 		

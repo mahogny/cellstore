@@ -1,8 +1,14 @@
 package cellstore.db;
 
+import java.awt.Color;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Vector;
+
+import cellstore.hdf.object.Dataset;
+import cellstore.hdf.object.h5.H5File;
 
 /**
  * Correlation between cells. This can really be several things: 
@@ -77,11 +83,54 @@ public class CellConnectivity
 	
 	/**
 	 * Read from HDF. Best stored as a compressed matrix, for random I/O
+	 * @throws IOException 
 	 */
-	public void readFromHdf(File fileh, CellStoreDB db)
+	public void readFromHdf(File fileh, CellStoreDB db) throws IOException
 		{
-		// TODO Auto-generated method stub
 		
+		try
+			{
+			H5File f=new H5File(fileh.getAbsolutePath());
+
+			//Read cells referenced
+			Dataset obCellID=(Dataset)f.get("cell_id");
+			@SuppressWarnings("unchecked")
+			Vector<Object> v=(Vector<Object>)obCellID.getData();
+			int[] hdfIndexCellset=(int[])v.get(0);
+			int[] hdfIndexCell   =(int[])v.get(1);
+			for(int i=0;i<hdfIndexCellset.length;i++)
+				{
+				indexCellset[i]=hdfIndexCellset[i];
+				indexCell[i]   =hdfIndexCell[i];
+				}
+			
+
+			//TODO
+			
+			
+			//Read coordinates
+			/*
+			Dataset obCoordinate=(Dataset)f.get("cell_id");
+			Vector<Object> v2=(Vector<Object>)obCoordinate.getData();
+			double[] hdfX=(double[])v2.get(0);
+			double[] hdfY=(double[])v2.get(1);
+			for(int i=0;i<hdfIndexCellset.length;i++)
+				{
+				indexCellset[i]=hdfIndexCellset[i];
+				indexCell[i]   =hdfIndexCell[i];
+				}
+*/
+			}
+		catch (OutOfMemoryError e)
+			{
+			throw new IOException(e.getMessage());
+			}
+		catch (Exception e)
+			{
+			System.out.println(fileh);
+			System.out.println(e);
+			throw new IOException(e.getMessage());
+			}			
 		}
 
 	
