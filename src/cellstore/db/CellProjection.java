@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
-import java.util.Vector;
 
 import cellstore.hdf.object.Dataset;
 import cellstore.hdf.object.h5.H5File;
@@ -104,7 +103,7 @@ public class CellProjection implements Serializable
 
 			//Read cells referenced
 			Dataset obCellID=(Dataset)f.get("cell_id");
-			RMatrixI mIndex=new RMatrixI(obCellID);//(int[])obCellID.getData(), obCellID.getDims());
+			RMatrixI mIndex=new RMatrixI(obCellID);
 			allocate(mIndex.nrow);
 			for(int i=0;i<mIndex.nrow;i++)
 				{
@@ -116,7 +115,6 @@ public class CellProjection implements Serializable
 			//Read coordinates
 			Dataset obCoordinate=(Dataset)f.get("cell_pos");
 			RMatrixD mCoordinate=new RMatrixD(obCoordinate);
-			//RMatrixD mCoordinate=new RMatrixD((double[])obCoordinate.getData(), obCoordinate.getDims());
 			for(int i=0;i<mCoordinate.nrow;i++)
 				{
 				x[i]=mCoordinate.get(i, 0);

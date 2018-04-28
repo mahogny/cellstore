@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 import cellstore.db.CellClustering;
+import cellstore.db.CellConnectivity;
 import cellstore.db.CellProjection;
 import cellstore.db.CellSetFile;
 import cellstore.db.CellStoreDB;
@@ -130,6 +131,18 @@ public class CellStoreConnectionLocal implements CellStoreConnection
 		boolean ret=db.removeProjection(id);
 		emitEvent(new CellStoreEventProjectionsUpdated());
 		return ret;
+		}
+
+	@Override
+	public Collection<Integer> getListConnectivity() throws IOException
+		{
+		return db.datasets.connectivity.keySet();
+		}
+
+	@Override
+	public CellConnectivity getConnectivity(int clId) throws IOException
+		{
+		return db.datasets.connectivity.get(clId);
 		}
 
 	}

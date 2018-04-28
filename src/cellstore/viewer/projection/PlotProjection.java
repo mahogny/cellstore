@@ -11,6 +11,8 @@ import java.awt.event.MouseWheelListener;
 import javax.swing.JPanel;
 
 import cellstore.db.CellClustering;
+import cellstore.db.CellConnectivity;
+import cellstore.db.CellConnectivity.OneConn;
 import cellstore.db.CellProjection;
 import cellstore.db.CellSet;
 import cellstore.db.CellSetFile;
@@ -59,6 +61,7 @@ public class PlotProjection extends JPanel implements MouseMotionListener, Mouse
 
 	public CellProjection projection;
 	private CellStoreConnection conn;
+	public CellConnectivity connectivity;
 
 	/**
 	 * Constructor
@@ -198,7 +201,7 @@ public class PlotProjection extends JPanel implements MouseMotionListener, Mouse
 				else if(colorByClustering!=null)
 					{
 					//Set the color based on clustering
-					Color c=colorByClustering.getColorFor(projection.indexCellSet[i], projection.indexCell[i]);
+					Color c=colorByClustering.getColorForCell(projection.indexCellSet[i], projection.indexCell[i]);
 					//System.out.println("got color "+c);
 					if(c!=null)
 						g.setColor(c);
@@ -228,10 +231,37 @@ public class PlotProjection extends JPanel implements MouseMotionListener, Mouse
 				drawClusterLegend(g);
 			}
 		
+		//Draw connectivity
+		drawConnectivity(g);
 		}
 
 	
 	
+	/**
+	 * Draw a connectivity object - lines between connected cells
+	 */
+	private void drawConnectivity(Graphics g)
+		{
+		if(connectivity!=null)
+			{
+			g.setColor(Color.GREEN);
+			
+			for(OneConn c:connectivity.getAllConnections())
+				{
+				//This makes a lot of wrong assumptions!!! need to match up cell IDs
+				
+				int x1=toScreenX(projection.x[c.from]);
+				int y1=toScreenY(projection.y[c.from]);
+				int x2=toScreenX(projection.x[c.to]);
+				int y2=toScreenY(projection.y[c.to]);
+
+				g.drawLine(x1, y1, x2, y2);
+				}
+			
+			
+			}
+		}
+
 	/**
 	 * Draw colors and names of cluster groups
 	 */

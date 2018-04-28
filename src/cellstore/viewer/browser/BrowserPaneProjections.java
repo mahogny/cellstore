@@ -114,7 +114,6 @@ public class BrowserPaneProjections extends JPanel implements ActionListener
 		
 		DefaultTableModel m=new DefaultTableModel(data, columnNames);
 		table.setModel(m);
-
 		}
 	
 	@Override

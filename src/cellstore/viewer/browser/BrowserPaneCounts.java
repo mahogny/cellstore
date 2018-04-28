@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 import cellstore.db.CellSetFile;
 import cellstore.db.CellStoreUser;
@@ -21,35 +22,14 @@ public class BrowserPaneCounts extends JPanel
 	{
 	private static final long serialVersionUID = 1L;
 
+	private JTable table = new JTable();
+
+	private CellStoreConnectionLocal conn;
+
 	public BrowserPaneCounts(CellStoreConnectionLocal conn)
 		{
-		String[] columnNames = {
-				"id",
-				"Name",
-        "Owner"};
+		this.conn=conn;
 		
-		Map<Integer, CellStoreUser> users=conn.getAllUsers();
-		Map<Integer,CellSetFile> cellsetFiles=conn.getCellSetFiles();
-		
-		
-		
-		int numuser=cellsetFiles.size();
-		Object[][] data = new Object[numuser][];
-		int i=0;
-		for(CellSetFile cellset:cellsetFiles.values())
-			{
-			CellStoreUser u=users.get(cellset.ownerID);
-			
-			Object[] dat={
-					new Integer(cellset.id),
-					cellset.name,
-					u.username
-					};
-			data[i]=dat;
-			i++;
-			}
-					
-		JTable table = new JTable(data, columnNames);
 		setLayout(new GridLayout(1, 1));
 		table.setDefaultEditor(Object.class, null);
 		
@@ -57,6 +37,7 @@ public class BrowserPaneCounts extends JPanel
 		table.setFillsViewportHeight(true);
 		add(scrollPane);
 
+		updateTable();
 		/*
 		table.addMouseListener(new MouseAdapter() 
 			{
@@ -76,6 +57,36 @@ public class BrowserPaneCounts extends JPanel
 
 	public void cellStoreEvent(CellStoreEvent e)
 		{
+		}
+
+	public void updateTable()
+		{
+		String[] columnNames = {
+				"id",
+				"Name",
+        "Owner"};
+		
+		Map<Integer, CellStoreUser> users=conn.getAllUsers();
+		Map<Integer,CellSetFile> cellsetFiles=conn.getCellSetFiles();
+		
+		int numuser=cellsetFiles.size();
+		Object[][] data = new Object[numuser][];
+		int i=0;
+		for(CellSetFile cellset:cellsetFiles.values())
+			{
+			CellStoreUser u=users.get(cellset.ownerID);
+			
+			Object[] dat={
+					new Integer(cellset.id),
+					cellset.name,
+					u.username
+					};
+			data[i]=dat;
+			i++;
+			}
+		
+		DefaultTableModel m=new DefaultTableModel(data, columnNames);
+		table.setModel(m);
 		}
 	
 

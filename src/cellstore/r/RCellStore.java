@@ -2,6 +2,7 @@ package cellstore.r;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 import cellstore.db.CellClustering;
 import cellstore.db.CellProjection;
@@ -134,17 +135,50 @@ public class RCellStore
 		}
 
 
+	
+	/**
+	 * Get one clustering
+	 * 
+	 * @param i
+	 * @return
+	 * @throws IOException
+	 */
 	public CellClustering getClustering(int i) throws IOException
 		{
 		return conn.getClustering(i);
 		}
 
 	
-		
-	/*
-	public static double[] test()
+	/**
+	 * Get a list of clusterings
+	 * 
+	 * @return
+	 */
+	public RDataFrame listClustering()
 		{
-		return new double[0];
+		ArrayList<Object> listID=new ArrayList<>();
+		ArrayList<Object> listName=new ArrayList<>();
+		ArrayList<Object> listNumCell=new ArrayList<>();
+		try
+			{
+			for(int id:conn.getListClusterings())
+				{
+				CellClustering clustering=conn.getClustering(id);
+				listID.add(new Integer(id));
+				listName.add(clustering.name);
+				listNumCell.add(new Integer(clustering.getNumCell()));
+				}
+			}
+		catch (IOException e)
+			{
+			e.printStackTrace();
+			}
+		RDataFrame df=new RDataFrame();
+		df.add("id",listID);
+		df.add("name",listName);
+		df.add("num.cell",listNumCell);
+		return df;
 		}
-	*/
+		
+
 	}

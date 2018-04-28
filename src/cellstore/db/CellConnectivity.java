@@ -7,8 +7,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Vector;
 
+import cellstore.hdf.HdfHandler;
 import cellstore.hdf.object.Dataset;
 import cellstore.hdf.object.h5.H5File;
+import cellstore.hdf.object.h5.H5Group;
+import cellstore.r.CSRMatrixD;
 
 /**
  * Correlation between cells. This can really be several things: 
@@ -38,25 +41,15 @@ public class CellConnectivity
 	
 	//In the future: possibly have gene1-gene2, to support cell communication.
 	//may also need P-value
-	public double score;
 
 
+	/**
+	 * One connection
+	 */
 	public static class OneConn
 		{
-		int from, to;
-		
-		double score;
-		
-		/*
-		public OneConn getOneConn()
-			{
-			OneConn c=new OneConn();
-			c.fromCellset=cellsets.get(indexCellset[from]);
-			c.toCellset=cellsets.get(indexCellset[to]);
-			
-			c.
-			
-			}*/
+		public int from, to;
+		public double score;
 		}
 	
 	
@@ -68,6 +61,13 @@ public class CellConnectivity
 		return listConnections;
 		}
 	
+	/**
+	 * Get only the connections related to a particular cell
+	 * 
+	 * @param cs
+	 * @param cellIndex
+	 * @return
+	 */
 	public Collection<OneConn> getConnectionsRelatedTo(CellSet cs, int cellIndex)
 		{
 		ArrayList<OneConn> arr=new ArrayList<>();
@@ -81,19 +81,46 @@ public class CellConnectivity
 		}
 
 	
+	
 	/**
 	 * Read from HDF. Best stored as a compressed matrix, for random I/O
 	 * @throws IOException 
 	 */
-	public void readFromHdf(File fileh, CellStoreDB db) throws IOException
+	public void fromHdf(File fileh, int relatedto, CellStoreDB db) throws IOException
 		{
 		
 		try
 			{
 			H5File f=new H5File(fileh.getAbsolutePath());
 
+			//For querying out of memory, is a compressed matrix better?
+			
+			//Read matrix and convert into object list
+			CSRMatrixD m=HdfHandler.getCSR(f, "connectivity");
+			m.iterate(new CSRMatrixD.Iterator()
+				{
+				public void iterate(int row, int col, double value)
+					{
+					OneConn c=new OneConn();
+					c.from=row;
+					c.to=col;
+					c.score=value;
+					if(c.score<0.01)
+						listConnections.add(c);
+					}
+				});
+
 			//Read cells referenced
 			Dataset obCellID=(Dataset)f.get("cell_id");
+			System.out.println(obCellID.getData().getClass());
+			int[] hdfid=(int[])obCellID.getData();
+			allocateCells(hdfid.length/2);
+			for(int i=0;i<hdfid.length/2;i++)
+				{
+				indexCellset[i]=hdfid[i*2];
+				indexCell[i]   =hdfid[i*2+1]; //hopefully right
+				}			
+			/*
 			@SuppressWarnings("unchecked")
 			Vector<Object> v=(Vector<Object>)obCellID.getData();
 			int[] hdfIndexCellset=(int[])v.get(0);
@@ -103,23 +130,7 @@ public class CellConnectivity
 				indexCellset[i]=hdfIndexCellset[i];
 				indexCell[i]   =hdfIndexCell[i];
 				}
-			
-
-			//TODO
-			
-			
-			//Read coordinates
-			/*
-			Dataset obCoordinate=(Dataset)f.get("cell_id");
-			Vector<Object> v2=(Vector<Object>)obCoordinate.getData();
-			double[] hdfX=(double[])v2.get(0);
-			double[] hdfY=(double[])v2.get(1);
-			for(int i=0;i<hdfIndexCellset.length;i++)
-				{
-				indexCellset[i]=hdfIndexCellset[i];
-				indexCell[i]   =hdfIndexCell[i];
-				}
-*/
+			*/
 			}
 		catch (OutOfMemoryError e)
 			{
@@ -128,52 +139,21 @@ public class CellConnectivity
 		catch (Exception e)
 			{
 			System.out.println(fileh);
-			System.out.println(e);
+			e.printStackTrace();
 			throw new IOException(e.getMessage());
 			}			
 		}
 
 	
-	
-	
-	
-	
-	public static void readFromCSV(CellConnectivity clust, File filecsv,CellSetFile cellset)
+	/**
+	 * Allocate space for a given number of cells (but not the matrix)
+	 * 
+	 * @param numcell
+	 */
+	private void allocateCells(int numcell)
 		{
-		// TODO Auto-generated method stub
-		
+		indexCell=new int[numcell];
+		indexCellset=new int[numcell];
 		}
-
 	
-	/*	
-	public void set(
-			ArrayList<Integer> cellsetIndex2,
-			ArrayList<Integer> cellsetCell2, 
-			ArrayList<String> cluster)
-		{
-		int numci=0;
-		TreeMap<String, Integer> mapci=new TreeMap<String, Integer>();
-		
-		int len=cellsetIndex2.size();
-		cellsetIndex=new int[len];
-		cellsetCell=new int[len];
-		clusterID=new int[len];
-		
-		for(int i=0;i<len;i++)
-			{
-			String thecluster=cluster.get(i);
-			if(!mapci.containsKey(thecluster))
-				{
-				mapci.put(cluster.get(i), numci);
-				numci++;
-				}
-			clusterID[i] = mapci.get(thecluster);
-			}
-		
-		clusterNames=new String[numci];
-		for(String s:mapci.keySet())
-			clusterNames[mapci.get(s)]=s;
-		
-		allocateColor();
-		}*/
 	}

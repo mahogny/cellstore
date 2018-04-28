@@ -36,12 +36,12 @@ public class ViewerProjection extends JFrame implements ActionListener, KeyListe
 	{
 	private static final long serialVersionUID = 1L;
 
-	private JComboBox<ProjectionColorBy> comboColorMeta=new JComboBox<ProjectionColorBy>();
+	private JComboBox<ComboOptionClustering> comboColorMeta=new JComboBox<ComboOptionClustering>();
 	private JRadioButton rbColorMeta=new JRadioButton();
 	private JRadioButton rbColorGene=new JRadioButton("Gene: ");
 	private PlotProjection view;
 	private JTextField tfGene=new JTextField();
-
+	PaneConnectivity paneConnectivity;
 
 	private GeneNameMapping gm=GeneNameMapping.getInstance();
 	
@@ -95,7 +95,13 @@ public class ViewerProjection extends JFrame implements ActionListener, KeyListe
 		topp.add(tfGene, c);
 		
 
-		PaneConnectivity paneConnectivity=new PaneConnectivity();
+		paneConnectivity=new PaneConnectivity(conn){
+			private static final long serialVersionUID = 1L;
+			public void changed()
+				{
+				updateViewInfo();
+				}
+		};
 		
 		setLayout(new GridLayout(1, 1));
 		add(EvSwingUtil.layoutACB(
@@ -129,13 +135,17 @@ public class ViewerProjection extends JFrame implements ActionListener, KeyListe
 	public void fillComboColorBy()
 		{
 		comboColorMeta.removeAllItems();
+		
+		ComboOptionClustering cbEmpty=new ComboOptionClustering();
+		comboColorMeta.addItem(cbEmpty);
+		
 		if(conn!=null)
 			{
 			try
 				{
 				for(int clId:conn.getListClusterings())
 					{
-					ProjectionColorBy cb=new ProjectionColorBy();
+					ComboOptionClustering cb=new ComboOptionClustering();
 					cb.clustering=conn.getClustering(clId);
 					comboColorMeta.addItem(cb);
 					}
@@ -153,12 +163,13 @@ public class ViewerProjection extends JFrame implements ActionListener, KeyListe
 	
 	void updateViewInfo()
 		{
-		//Default: No color
+		//Default: No color or anything
 		view.colorByClustering=null;
 		view.colorByGene=null;
+		view.connectivity=paneConnectivity.getCurrentConnectivity();
 
 		//Color by clustering?
-		ProjectionColorBy cb=(ProjectionColorBy)comboColorMeta.getSelectedItem();
+		ComboOptionClustering cb=(ComboOptionClustering)comboColorMeta.getSelectedItem();
 		if(cb!=null && rbColorMeta.isSelected())
 			view.colorByClustering=cb.clustering;
 		
@@ -169,6 +180,7 @@ public class ViewerProjection extends JFrame implements ActionListener, KeyListe
 			view.colorByGene=id;
 			}
 		
+		//Connectivity
 		
 		view.repaint();
 		}

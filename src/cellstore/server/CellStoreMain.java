@@ -210,14 +210,14 @@ public class CellStoreMain
 				File filecsv=new File(f,"connectivity.csv");
 				if(fileh.exists())
 					{
-					//clust.fromHdf(fileh, relatedto, db);
-					throw new IOException("not implemented");
+					System.out.println("-----------conn-----------------------------------");
+					connectivity.fromHdf(fileh, relatedto, db);
 					}
-				else if(filecsv.exists())
+				/*else if(filecsv.exists())
 					{
 					CellSetFile cellset=db.datasets.cellsets.get(relatedto);//.getCellSet();
 					CellConnectivity.readFromCSV(connectivity, filecsv, cellset);
-					}
+					}*/
 				else
 					throw new IOException("Invalid cell clustering");
 				db.datasets.connectivity.put(id,connectivity);

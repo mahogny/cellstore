@@ -36,10 +36,10 @@ public class DataBrowser extends JFrame implements ActionListener, CellStoreEven
 	private JMenuItem miQuit=new JMenuItem("Quit");
 	
 	
-	private BrowserPaneProjections vdr;
-	BrowserPaneCounts vcs;
-	BrowserPaneUsers vu;
-	BrowserPaneClusterings vc;
+	private BrowserPaneProjections viewProjections;
+	BrowserPaneCounts viewCounts;
+	BrowserPaneUsers viewUsers;
+	BrowserPaneClusterings viewClusterings;
 	
 	/**
 	 * Constructor of the browser
@@ -56,15 +56,15 @@ public class DataBrowser extends JFrame implements ActionListener, CellStoreEven
 		mServer.add(miQuit);
 		setJMenuBar(menubar);
 		
-		vu=new BrowserPaneUsers(conn);
-		vcs=new BrowserPaneCounts(conn);
-		vdr=new BrowserPaneProjections(conn);
-		vc=new BrowserPaneClusterings(conn);
+		viewUsers=new BrowserPaneUsers(conn);
+		viewCounts=new BrowserPaneCounts(conn);
+		viewProjections=new BrowserPaneProjections(conn);
+		viewClusterings=new BrowserPaneClusterings(conn);
 		
-		tabbedPane.add("Projections", vdr);
-		tabbedPane.add("Clusterings", vc);
-		tabbedPane.add("Counts", vcs);
-		tabbedPane.add("Users", vu);
+		tabbedPane.add("Projections", viewProjections);
+		tabbedPane.add("Clusterings", viewClusterings);
+		tabbedPane.add("Counts", viewCounts);
+		tabbedPane.add("Users", viewUsers);
 		
 		BrowserPaneStudies vs=new BrowserPaneStudies(conn);
 		JPanel pvs=new JPanel();
@@ -93,7 +93,17 @@ public class DataBrowser extends JFrame implements ActionListener, CellStoreEven
 		 */
 		if(e.getSource()==miRefresh)
 			{
-			vdr.updateTable();
+			viewProjections.updateTable();
+			viewUsers.updateTable();
+			viewCounts.updateTable();
+			viewClusterings.updateTable();
+			/*
+			viewUsers=new BrowserPaneUsers(conn);
+			viewCounts=new BrowserPaneCounts(conn);
+			viewProjections=new BrowserPaneProjections(conn);
+			viewClusterings=new BrowserPaneClusterings(conn);
+*/
+			
 			}
 		else if(e.getSource()==miConnect)
 			{
@@ -110,10 +120,10 @@ public class DataBrowser extends JFrame implements ActionListener, CellStoreEven
 	@Override
 	public void cellStoreEvent(CellStoreEvent e)
 		{
-		vu.cellStoreEvent(e);
-		vcs.cellStoreEvent(e);
-		vdr.cellStoreEvent(e);
-		vc.cellStoreEvent(e);
+		viewUsers.cellStoreEvent(e);
+		viewCounts.cellStoreEvent(e);
+		viewProjections.cellStoreEvent(e);
+		viewClusterings.cellStoreEvent(e);
 		}
 
 	}

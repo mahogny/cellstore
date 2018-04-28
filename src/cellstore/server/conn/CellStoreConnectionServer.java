@@ -9,6 +9,7 @@ import java.net.UnknownHostException;
 import java.util.Collection;
 
 import cellstore.db.CellClustering;
+import cellstore.db.CellConnectivity;
 import cellstore.db.CellProjection;
 import cellstore.db.CellSetFile;
 import cellstore.server.message.Message;
@@ -120,7 +121,7 @@ public class CellStoreConnectionServer implements CellStoreConnection
 	@Override
 	public Collection<Integer> getListClusterings() throws IOException
 		{
-		MessageGetUsers m=new MessageGetUsers();
+		MessageGetClusterings m=new MessageGetClusterings();
 		m.id=-1; //TODO Possibly instead use a Set
 		ResponseListClusterings resp=(ResponseListClusterings)sendReceive(m);
 		return resp.list.keySet();
@@ -129,10 +130,18 @@ public class CellStoreConnectionServer implements CellStoreConnection
 	@Override
 	public CellClustering getClustering(int id) throws IOException
 		{
-		MessageGetClusterings m=new MessageGetClusterings();
-		m.id=id;
-		ResponseListClusterings resp=(ResponseListClusterings)sendReceive(m);
-		return resp.list.get(id);
+		try
+			{
+			MessageGetClusterings m=new MessageGetClusterings();
+			m.id=id;
+			ResponseListClusterings resp=(ResponseListClusterings)sendReceive(m);
+			return resp.list.get(id);
+			}
+		catch (Exception e)
+			{
+			e.printStackTrace();
+			return null;
+			}
 		}
 
 	/**
@@ -186,6 +195,17 @@ public class CellStoreConnectionServer implements CellStoreConnection
 		m.id=id;
 		ResponsePassFail resp=(ResponsePassFail)sendReceive(m);
 		return resp.passed;
+		}
+
+	@Override
+	public Collection<Integer> getListConnectivity() throws IOException
+		{
+		throw new IOException("not implemented");
+		}
+	
+	public CellConnectivity getConnectivity(int clId) throws IOException
+		{
+		throw new IOException("not implemented");
 		}
 
 	}

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Collection;
 
 import cellstore.db.CellClustering;
+import cellstore.db.CellConnectivity;
 import cellstore.db.CellProjection;
 import cellstore.db.CellSetFile;
 import cellstore.viewer.event.CellStoreEvent;
@@ -21,6 +22,7 @@ public interface CellStoreConnection
 	public void emitEvent(CellStoreEvent e);
 
 	public Collection<Integer> getListClusterings() throws IOException;
+	public Collection<Integer> getListConnectivity() throws IOException;
 
 	public CellClustering getClustering(int clId) throws IOException;
 
@@ -28,6 +30,9 @@ public interface CellStoreConnection
 
 	
 	public boolean authenticate(String user, String password) throws IOException;
+
+	public CellConnectivity getConnectivity(int clId) throws IOException;
+
 	
 	
 	}

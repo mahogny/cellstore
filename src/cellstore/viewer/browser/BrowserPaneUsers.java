@@ -77,6 +77,12 @@ public class BrowserPaneUsers extends JPanel
 	public void cellStoreEvent(CellStoreEvent e)
 		{
 		}
+
+	public void updateTable()
+		{
+		// TODO Auto-generated method stub
+		
+		}
 	
 
 	}

@@ -140,7 +140,7 @@ public class CellClustering implements Serializable
 			}
 		}
 	
-	public Color getColorFor(int setID, int cell)
+	public Color getColorForCell(int setID, int cell)
 		{
 		genLookup();
 		CellRef ref=new CellRef(setID, cell);
@@ -180,8 +180,6 @@ public class CellClustering implements Serializable
 			for(int i=0;i<colors.length;i++)
 				clusterColor[i]=parseColor(colors[i]);
 			
-			
-			
 			//Read cells referenced
 			Dataset obCellID=(Dataset)f.get("cell_id");
 			RMatrixI mIndex=new RMatrixI(obCellID);//(int[])obCellID.getData(), obCellID.getDims());
@@ -192,31 +190,6 @@ public class CellClustering implements Serializable
 				indexCell[i]   =mIndex.get(i, 1);
 				clusterID[i]   =mIndex.get(i, 2);
 				}
-
-			/*
-			Dataset obCells=(Dataset)f.get("cells");
-			@SuppressWarnings("unchecked")
-			Vector<Object> v=(Vector<Object>)obCells.getData();
-			
-			
-			
-			String[] cellnames=(String[])v.get(0);
-			clusterID=(int[])v.get(1);
-			
-			//Map cellnames to ID
-			CellSetFile csf=db.datasets.cellsets.get(relatedTo);
-			CellSet cs=csf.getCellSet();
-			indexCellSet=new int[cellnames.length];
-			indexCell=new int[cellnames.length];
-			
-			for(int i=0;i<cellnames.length;i++)
-				{
-				//System.out.println("name "+cellnames[i]+ "   "+cs.getIndexOfCell(cellnames[i]));
-				indexCellSet[i]=csf.id;
-				indexCell[i] =cs.getIndexOfCell(cellnames[i]);
-				}*/
-			
-			
 			}
 		catch (OutOfMemoryError e)
 			{
@@ -299,15 +272,19 @@ public class CellClustering implements Serializable
 		}
 
 
+	/**
+	 * Create a color from a string, #FFFFFF
+	 */
 	public static Color parseColor(String s)
 		{
 		int r = Integer.parseInt(s.substring(1,3), 16);
 		int g = Integer.parseInt(s.substring(3,5), 16);
 		int b = Integer.parseInt(s.substring(5,7), 16);
 		Color c=new Color(r, g, b);
-		System.out.println(c);
 		return c;
 		}
+
+
 
 
 
