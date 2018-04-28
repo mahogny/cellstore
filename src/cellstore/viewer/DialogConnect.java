@@ -43,7 +43,8 @@ public class DialogConnect extends JDialog implements ActionListener
 						new JLabel("Password: "),tfPassword
 						),
 				EvSwingUtil.layoutCompactHorizontal(bOk, bCancel)));
-		pack();
+		setTitle("Connect to server");
+		setSize(300,130);
 		setVisible(true);
 		
 		bOk.addActionListener(this);

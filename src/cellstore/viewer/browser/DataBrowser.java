@@ -77,6 +77,10 @@ public class DataBrowser extends JFrame implements ActionListener, CellStoreEven
 		add(pvs);
 
 		
+		miConnect.addActionListener(this);
+		miRefresh.addActionListener(this);
+		miQuit.addActionListener(this);
+		
 		setSize(600,500);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
@@ -97,17 +101,14 @@ public class DataBrowser extends JFrame implements ActionListener, CellStoreEven
 			viewUsers.updateTable();
 			viewCounts.updateTable();
 			viewClusterings.updateTable();
-			/*
-			viewUsers=new BrowserPaneUsers(conn);
-			viewCounts=new BrowserPaneCounts(conn);
-			viewProjections=new BrowserPaneProjections(conn);
-			viewClusterings=new BrowserPaneClusterings(conn);
-*/
-			
 			}
 		else if(e.getSource()==miConnect)
 			{
-			new DialogConnect();
+			DialogConnect dia=new DialogConnect();
+			if(dia.isOk)
+				{
+				
+				}
 			}
 		else if(e.getSource()==miQuit)
 			{
