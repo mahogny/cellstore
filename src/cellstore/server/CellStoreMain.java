@@ -187,41 +187,42 @@ public class CellStoreMain
 	public void scanDataConnectivity() throws IOException
 		{
 		File fexpdir=new File("data/connectivity");
-		for(File f:fexpdir.listFiles())
-			if(f.isDirectory())
-				{
-				int id=Integer.parseInt(f.getName());
-				System.out.println(id);
-				
-				CellConnectivity connectivity=new CellConnectivity();
-				
-				//// Read the metadata
-				FileInputStream is=new FileInputStream(new File(f,"info.json"));
-				JsonReader rdr = Json.createReader(is);
-				JsonObject result = rdr.readObject();
-				connectivity.name=result.getString("name");
-				connectivity.owner=result.getInt("owner");
-				connectivity.id=id;
-				int relatedto=result.getInt("relatedto");
-				is.close();
-				
-				//// Attach the data
-				File fileh=new File(f,"connectivity.h5");
-				File filecsv=new File(f,"connectivity.csv");
-				if(fileh.exists())
+		if(fexpdir.exists())
+			for(File f:fexpdir.listFiles())
+				if(f.isDirectory())
 					{
-					System.out.println("-----------conn-----------------------------------");
-					connectivity.fromHdf(fileh, relatedto, db);
+					int id=Integer.parseInt(f.getName());
+					System.out.println(id);
+					
+					CellConnectivity connectivity=new CellConnectivity();
+					
+					//// Read the metadata
+					FileInputStream is=new FileInputStream(new File(f,"info.json"));
+					JsonReader rdr = Json.createReader(is);
+					JsonObject result = rdr.readObject();
+					connectivity.name=result.getString("name");
+					connectivity.owner=result.getInt("owner");
+					connectivity.id=id;
+					int relatedto=result.getInt("relatedto");
+					is.close();
+					
+					//// Attach the data
+					File fileh=new File(f,"connectivity.h5");
+					File filecsv=new File(f,"connectivity.csv");
+					if(fileh.exists())
+						{
+						System.out.println("-----------conn-----------------------------------");
+						connectivity.fromHdf(fileh, relatedto, db);
+						}
+					/*else if(filecsv.exists())
+						{
+						CellSetFile cellset=db.datasets.cellsets.get(relatedto);//.getCellSet();
+						CellConnectivity.readFromCSV(connectivity, filecsv, cellset);
+						}*/
+					else
+						throw new IOException("Invalid cell clustering");
+					db.datasets.connectivity.put(id,connectivity);
 					}
-				/*else if(filecsv.exists())
-					{
-					CellSetFile cellset=db.datasets.cellsets.get(relatedto);//.getCellSet();
-					CellConnectivity.readFromCSV(connectivity, filecsv, cellset);
-					}*/
-				else
-					throw new IOException("Invalid cell clustering");
-				db.datasets.connectivity.put(id,connectivity);
-				}
 		}
 
 	
