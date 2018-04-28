@@ -1,5 +1,6 @@
 package cellstore.server;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -77,18 +78,10 @@ public class ClientThread extends Thread
 			{
 			while(!shutdown)
 				{
-				/*
-				dos.writeInt(666);
-				dos.writeShort(777);
-				dos.writeUTF("foo");
-				dos.flush();*/
-				
-				
 				//Get a message
 				Message m=(Message)dis.readObject();
 				//System.out.println("Server got message "+m);
 				Response resp=m.handleOnServer(this, main);
-				
 				
 				//Send back response
 				if(resp!=null)
@@ -102,6 +95,10 @@ public class ClientThread extends Thread
 				}
 			
 			clientSocket.close();
+			}
+		catch (EOFException e)
+			{
+			System.out.println("--- EOF, client quit");
 			}
 		catch (Exception e)
 			{
