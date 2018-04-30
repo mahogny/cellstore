@@ -56,6 +56,7 @@ public class BrowserPaneClusterings extends JPanel
 				pButtons));
 		
 
+		updateTable();
 
 		/*
 		table.addMouseListener(new MouseAdapter() 

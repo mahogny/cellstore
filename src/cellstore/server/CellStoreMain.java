@@ -139,8 +139,8 @@ public class CellStoreMain
 	 */
 	public void scanDataClusterings() throws IOException
 		{
-		File fexpdir=new File("data/clustering");
-		for(File f:fexpdir.listFiles())
+		File fdir=new File("data/clustering");
+		for(File f:fdir.listFiles())
 			if(f.isDirectory())
 				{
 				int id=Integer.parseInt(f.getName());

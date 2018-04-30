@@ -3,8 +3,6 @@ library(rJava)
 #####################################################################
 ## Connect to cellstore
 cellstore.connect <- function(address="localhost", port=12649){
-  # user="mahogny"
-  # password="123"
   .jinit(force.init = TRUE, 
          classpath="/home/mahogny/javaproj/cellstore/bin",
          parameters="-Xmx512m")
