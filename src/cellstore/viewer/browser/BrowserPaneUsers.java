@@ -2,15 +2,20 @@ package cellstore.viewer.browser;
 
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 
 import cellstore.db.CellStoreUser;
 import cellstore.server.conn.CellStoreConnectionLocal;
+import cellstore.viewer.AddUser;
+import cellstore.viewer.DialogConnect;
 import cellstore.viewer.event.CellStoreEvent;
 import util.EvSwingUtil;
 
@@ -20,7 +25,7 @@ import util.EvSwingUtil;
  * @author Johan Henriksson
  *
  */
-public class BrowserPaneUsers extends JPanel
+public class BrowserPaneUsers extends JPanel implements ActionListener
 	{
 	private static final long serialVersionUID = 1L;
 
@@ -64,6 +69,10 @@ public class BrowserPaneUsers extends JPanel
 		JPanel pButtons=new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		pButtons.add(bAdd);
 		pButtons.add(bDelete);
+		bAdd.addActionListener(this);
+		bDelete.addActionListener(this);
+
+
 		
 		setLayout(new GridLayout(1, 1));
 		add(EvSwingUtil.layoutACB(
@@ -76,6 +85,7 @@ public class BrowserPaneUsers extends JPanel
 
 	public void cellStoreEvent(CellStoreEvent e)
 		{
+
 		}
 
 	public void updateTable()
@@ -83,6 +93,23 @@ public class BrowserPaneUsers extends JPanel
 		// TODO Auto-generated method stub
 		
 		}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if(e.getSource()==bAdd)
+		{
+			AddUser userDialog =new AddUser();
+			if(userDialog.isOk)
+			{
+				
+			}
+		}
+	else if(e.getSource()==bDelete)
+		{
+		}
+		
+	}
 	
 
 	}
